@@ -669,7 +669,6 @@
                 let fileNames = response.data
 
                 for (let i = 0; i < fileNames.length; i++) {
-
                   window.open(process.env.ADMIN_API+"/order/excelDownload?fileName="+fileNames[i])
                 }
 
