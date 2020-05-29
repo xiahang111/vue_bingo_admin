@@ -1,19 +1,25 @@
 <template>
   <el-table :data="list" style="width: 100%;padding-top: 15px;">
-    <el-table-column label="订单概览" min-width="200">
+    <el-table-column label="订单编号" min-width="200">
       <template slot-scope="scope">
-        {{ scope.row.order_no | orderNoFilter }}
+        {{ scope.row.orderId | orderNoFilter }}
       </template>
     </el-table-column>
-    <el-table-column label="Price" width="195" align="center">
+    <el-table-column label="价格" width="195" align="center">
       <template slot-scope="scope">
-        ¥{{ scope.row.price | toThousandFilter }}
+        ¥{{ scope.row.totalPrice | toThousandFilter }}
       </template>
     </el-table-column>
-    <el-table-column label="Status" width="100" align="center">
+
+    <el-table-column label="业务员" width="195" align="center">
+      <template slot-scope="scope">
+        {{ scope.row.salesman | toThousandFilter }}
+      </template>
+    </el-table-column>
+    <el-table-column label="订单状态" width="100" align="center">
       <template slot-scope="{row}">
         <el-tag :type="row.status | statusFilter">
-          {{ row.status==='pending'?'进行中':'已完成' }}
+          {{ row.status==1?'进行中':'已完成' }}
         </el-tag>
       </template>
     </el-table-column>
@@ -21,7 +27,7 @@
 </template>
 
 <script>
-import { transactionList } from '@/api/remote-search'
+import { getIndexOrderInfo } from '@/api/index'
 
 export default {
   filters: {
@@ -38,7 +44,7 @@ export default {
   },
   data() {
     return {
-      list: null
+      list: []
     }
   },
   created() {
@@ -46,13 +52,13 @@ export default {
   },
   methods: {
     fetchData() {
-      this.list = [{order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"},
-        {order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"},
-        {order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"},
-        {order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"},
-        {order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"},
-        {order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"},
-        {order_no:"3Dbb4EF-bbA7-01aa-c4cF-C3D0e73f5e1B",timestamp:"520573885433",status:"pending",price:6017.8,username:"李冠群"}]
+
+      getIndexOrderInfo().then(response =>{
+        if(response.code == 'success'){
+
+          this.list = response.data
+        }
+      })
 
     }
   }

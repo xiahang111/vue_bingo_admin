@@ -159,7 +159,8 @@
 
         <el-col span="6">
           <el-form-item label="拉手位置" prop="remark">
-            <el-input v-model="materialInfo.handlePlace" :disabled="materialInfo.handleType == '0'" placeholder="请输入" style="width: 80%"/>
+            <el-input v-model="materialInfo.handlePlace" :disabled="materialInfo.handleType == '0'" placeholder="请输入"
+                      style="width: 80%"/>
           </el-form-item>
         </el-col>
 
@@ -553,7 +554,7 @@
           }, {value: '20', label: '20'},],
         productType: [{value: '1', label: '成品'},
           {value: '2', label: '半成品'}],
-        handleType: [{value: '0', label: '无拉手'},{value: '1', label: '168拉手'},
+        handleType: [{value: '0', label: '无拉手'}, {value: '1', label: '168拉手'},
           {value: '2', label: '1100拉手'},
           {value: '3', label: '通体拉手'},
           {value: '4', label: '50斜边镶钻拉手'}],
@@ -668,9 +669,18 @@
 
                 let fileNames = response.data
 
+                let url = '/order/excelDownload?fileNames=';
                 for (let i = 0; i < fileNames.length; i++) {
-                  window.open(process.env.ADMIN_API+"/order/excelDownload?fileName="+fileNames[i])
+
+                  if (i == 0) {
+                    url = url + fileNames[i]
+                  } else {
+                    url = url + "," + fileNames[i]
+                  }
+
                 }
+                alert(url)
+                window.open(process.env.ADMIN_API + url);
 
               }
             })

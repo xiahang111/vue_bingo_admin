@@ -8,3 +8,11 @@ export function indexOrderAndSaleCount(query) {
     data: query
   })
 }
+
+export function getIndexOrderInfo(query) {
+  return request({
+    url: process.env.ADMIN_API + '/index/getIndexOrderInfo',
+    method: 'get',
+    param: query
+  })
+}
