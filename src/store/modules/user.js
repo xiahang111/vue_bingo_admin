@@ -1,5 +1,7 @@
 import { login , logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import { asyncRoutes, constantRoutes } from '@/router'
+import { hasPermission } from '@/store/modules/permission'
 
 const user = {
   state: {
@@ -30,6 +32,7 @@ const user = {
     }
   },
   actions: {
+
     // 登录
     Login({ commit }, userInfo) {
 
@@ -65,11 +68,11 @@ const user = {
       return new Promise((resolve, reject) => {
         getInfo(state.token).then(response => {
           const data = response.data
-          //if (data.roles && data.roles.length > 0) {
-          if (response.code == 'success') {
+          if (data.roles && data.roles.length > 0) {
+          //if (response.code == 'success') {
 
             // 验证返回的roles是否是一个非空数组
-            //commit('SET_ROLES', data.roles)
+            commit('SET_ROLES', data.roles)
           } else {
             reject('登录已过期，请重新登录!')
           }

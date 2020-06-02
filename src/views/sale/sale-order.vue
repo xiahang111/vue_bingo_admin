@@ -44,7 +44,7 @@
       <el-table-column label="订单编号" prop="id" sortable="custom" align="center" width="280"
                        :class-name="getSortClass('id')">
         <template slot-scope="{row}">
-          <span>{{ row.uid }}</span>
+          <span>{{ row.orderId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="业务员"  align="center">
@@ -53,25 +53,31 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="客户姓名"  align="center">
+      <el-table-column label="制单人"  align="center">
         <template slot-scope="{row}">
-          <span>{{ row.customerName }}</span>
+          <span>{{ row.orderMaker }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="客户地址" align="center">
+      <el-table-column label="订单类型" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.customerAddr }}</span>
+          <span>{{ row.productType }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="金额"  align="center">
+      <el-table-column label="总金额"  align="center">
         <template slot-scope="{row}">
-          <span style="color: #f4516c">{{ row.amount }}</span>
+          <span style="color: #f4516c">{{ row.totalPrice }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" class-name="status-col" align="center" width="160">
+      <el-table-column label="日期"  align="center">
+        <template slot-scope="{row}">
+          <span style="color: #f4516c">{{ row.orderDate }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="状态" class-name="status-col" align="center" >
         <template slot-scope="{row}">
           <el-tag :type="success" v-if="row.status == 0">
             进行中
@@ -85,48 +91,130 @@
         </template>
       </el-table-column>
 
+      <el-table-column fixed="right" label="操作" align="center">
+        <template slot-scope="scope">
+          <el-button @click="handleUpdate(scope.row)" type="text" size="small"  >详情</el-button>
+          <el-button type="text" size="small">编辑</el-button>
+        </template>
+      </el-table-column>
+
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
                 @pagination="getList"/>
 
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px"
-               style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('table.type')" prop="type">
-          <el-select v-model="temp.type" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name"
-                       :value="item.key"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.date')" prop="timestamp">
-          <el-date-picker v-model="temp.timestamp" type="datetime" placeholder="Please pick a date"/>
-        </el-form-item>
-        <el-form-item :label="$t('table.title')" prop="title">
-          <el-input v-model="temp.title"/>
-        </el-form-item>
-        <el-form-item :label="$t('table.status')">
-          <el-select v-model="temp.status" class="filter-item" placeholder="Please select">
-            <el-option v-for="item in statusOptions" :key="item" :label="item" :value="item"/>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="$t('table.importance')">
-          <el-rate v-model="temp.importance" :colors="['#99A9BF', '#F7BA2A', '#FF9900']" :max="3"
-                   style="margin-top:8px;"/>
-        </el-form-item>
-        <el-form-item :label="$t('table.remark')">
-          <el-input v-model="temp.remark" :autosize="{ minRows: 2, maxRows: 4}" type="textarea"
-                    placeholder="Please input"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">
-          {{ $t('table.cancel') }}
-        </el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">
-          {{ $t('table.confirm') }}
-        </el-button>
-      </div>
+    <el-dialog title="" :visible.sync="dialogFormVisible">
+      <el-divider content-position="left"><span style="color: #b4170f;font-size: large">产品信息</span></el-divider>
+
+      <el-table :data="product.materials" height="250" :stripe="true" align="center">
+        <el-table-column prop="materialType" label="料型号">
+          <template slot-scope="scope">
+            <span v-if="scope.row.materialType == 1001">联动1号</span>
+            <span v-if="scope.row.materialType == 1002">联动2号</span>
+            <span v-if="scope.row.materialType == 1003">联动3号</span>
+            <span v-if="scope.row.materialType == 2001">上品2号</span>
+            <span v-if="scope.row.materialType == 3001">50斜边</span>
+            <span v-if="scope.row.materialType == 4001">上品1号</span>
+            <span v-if="scope.row.materialType == 5001">20窄边</span>
+            <span v-if="scope.row.materialType == 5002">22窄边</span>
+            <span v-if="scope.row.materialType == 5003">22加厚</span>
+            <span v-if="scope.row.materialType == 6001">天地1号</span>
+            <span v-if="scope.row.materialType == 7001">兵歌1号</span>
+            <span v-if="scope.row.materialType == 7002">兵歌2号</span>
+            <span v-if="scope.row.materialType == 7003">兵歌3号</span>
+            <span v-if="scope.row.materialType == 7004">兵歌4号</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="materialColor" label="料颜色">
+          <template slot-scope="scope">
+            <span v-if="scope.row.materialColor == 1">黄铜拉丝</span>
+            <span v-if="scope.row.materialColor == 2">古铜拉丝</span>
+            <span v-if="scope.row.materialColor == 3">哑黑</span>
+            <span v-if="scope.row.materialColor == 4">瓷沙黑</span>
+            <span v-if="scope.row.materialColor == 5">罗马灰</span>
+            <span v-if="scope.row.materialColor == 6">绅士灰</span>
+            <span v-if="scope.row.materialColor == 7">拉丝黑</span>
+            <span v-if="scope.row.materialColor == 8">拉丝灰</span>
+
+          </template>
+        </el-table-column>
+        <el-table-column prop="handleType" label="拉手类型">
+          <template slot-scope="scope">
+            <span v-if="scope.row.handleType == 0">无拉手</span>
+            <span v-if="scope.row.handleType == 1">168拉手</span>
+            <span v-if="scope.row.handleType == 2">1100拉手</span>
+            <span v-if="scope.row.handleType == 3">通体拉手</span>
+            <span v-if="scope.row.handleType == 4">50斜边镶钻拉手</span>
+            <span v-if="scope.row.handleType == 5">联动1号后装拉手</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="glassColor" label="玻璃颜色">
+          <template slot-scope="scope">
+            <span v-if="scope.row.glassColor == 1">欧洲灰</span>
+            <span v-if="scope.row.glassColor == 2">蓝星灰</span>
+            <span v-if="scope.row.glassColor == 3">金茶</span>
+            <span v-if="scope.row.glassColor == 4">浅茶</span>
+            <span v-if="scope.row.glassColor == 5">长虹</span>
+            <span v-if="scope.row.glassColor == 6">白玻</span>
+            <span v-if="scope.row.glassColor == 7">黑玻</span>
+            <span v-if="scope.row.glassColor == 8">超白春意阑珊</span>
+            <span v-if="scope.row.glassColor == 9">丝印黑边</span>
+
+          </template>
+        </el-table-column>
+        <el-table-column prop="height" label="高度"></el-table-column>
+        <el-table-column prop="width" label="宽度"></el-table-column>
+        <el-table-column prop="materialNum" label="扇数"></el-table-column>
+        <el-table-column prop="hingeLocation" label="合页孔位置"></el-table-column>
+        <el-table-column prop="handlePlace" label="拉手位置" width="110"></el-table-column>
+        <el-table-column prop="direction" label="开启方向" width="110"></el-table-column>
+        <el-table-column prop="price" label="单价"></el-table-column>
+        <el-table-column prop="remark" label="备注"></el-table-column>
+        <el-table-column label="操作" width="120">
+          <template slot-scope="scope">
+            <el-button
+              @click.native.prevent="deleteRow(scope.$index, product.materials)"
+              type="text"
+              size="small">
+              移除
+            </el-button>
+          </template>
+        </el-table-column>
+
+      </el-table>
+
+
+      <el-divider content-position="left"><span style="color: #b4170f;font-size: large">五金信息</span></el-divider>
+
+
+      <el-table :data="product.ironwares" height="250" :stripe="true" align="center">
+        <el-table-column prop="ironwareName" label="配件名称" width="120"></el-table-column>
+        <el-table-column prop="unit" label="单位" width="120"></el-table-column>
+        <el-table-column prop="ironwareColor" label="颜色" width="120">
+          <template slot-scope="scope">
+            <span v-if="scope.row.ironwareColor == 0">无</span>
+            <span v-if="scope.row.ironwareColor == 1">黑色</span>
+            <span v-if="scope.row.ironwareColor == 2">灰色</span>
+            <span v-if="scope.row.ironwareColor == 3">金色</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="specification" label="规格" width="120"></el-table-column>
+        <el-table-column prop="ironwareNum" label="数量" width="120"></el-table-column>
+        <el-table-column prop="price" label="单价" width="120"></el-table-column>
+        <el-table-column prop="totalPrice" label="金额" width="120"></el-table-column>
+        <el-table-column prop="remark" label="备注" width="120"></el-table-column>
+
+        <el-table-column label="操作" width="120">
+          <template slot-scope="scope">
+            <el-button
+              @click.native.prevent="deleteRow(scope.$index, product.ironwares)"
+              type="text"
+              size="small">
+              移除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
 
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
@@ -166,9 +254,10 @@
     filters: {
       statusFilter(status) {
         const statusMap = {
-          '进行中': '0',
-          '已完成': '1',
-          '已退款': '2'
+          '未确认': '0',
+          '已确认': '1',
+          '已完成': '2',
+          '退单': '2'
         }
         return statusMap[status]
       },
@@ -178,6 +267,54 @@
     },
     data() {
       return {
+        product: {
+          isClear: 'true',
+          productType: '1',
+          customerName: '',
+          customerNick: '',
+          customerAddr: '',
+          customerPhoneNum: '',
+          express: '',
+          materials: [],//材玻信息
+          ironwares: [],//五金信息
+          bigPackageNum: '',
+          simplePackageNum: '',
+          orderDate: '',
+          deliveryDate: '',
+          orderId: '',
+          salesman: '',//业务员
+          orderMaker: '',//制单人
+          remark: ''
+        },
+
+        materialInfo: {
+
+          materialColor: '',
+          materialType: '',
+          handleType: '',
+          glassColor: '',
+          height: '',
+          width: '',
+          hingeLocation: '',
+          materialNum: '',
+          handlePlace: '',
+          direction: '',//开启方向
+          remark: '',
+          price: '',
+          area: '',//面积
+          totalPrice: ''
+        },
+
+        ironwareInfo: {
+          ironwareName: '',
+          unit: '',
+          ironwareColor: '',
+          specification: '',//规格
+          ironwareNum: '',
+          price: '',
+          remark: '',
+          totalPrice: ''
+        },
         tableKey: 0,
         list: null,
         total: 0,
@@ -193,7 +330,7 @@
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
         sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-        statusOptions: ['进行中', '已完成', '已退款'],
+        statusOptions: ['进行中', '已完成', '已退款','退单'],
         showReviewer: false,
         temp: {
           id: undefined,
@@ -230,12 +367,29 @@
       getList() {
         this.listLoading = false
         this.list = [{
-          uid: '8die04k3jsix8384jdksoq',
+          orderId: '门-2004001',
           salesman: '王进喜',
-          customerName: '刘华荣',
-          customerAddr: '江西省九江市湖口县',
-          amount: '3764.25',
+          orderMaker: '刘华荣',
+          productType: '成品',
+          totalPrice: '3897',
+          orderDate: '2020-05-31',
           status: '1'
+        },{
+          orderId: '门-2004012',
+          salesman: '王进喜',
+          orderMaker: '刘华荣',
+          productType: '成品',
+          totalPrice: '3897',
+          orderDate: '2020-05-31',
+          status: '2'
+        },{
+          orderId: '门-2004014',
+          salesman: '王进喜',
+          orderMaker: '刘华荣',
+          productType: '成品',
+          totalPrice: '3897',
+          orderDate: '2020-05-31',
+          status: '0'
         }]
         this.total = this.list.length
 
@@ -339,12 +493,11 @@
         })
         this.list.splice(index, 1)
       },
-      /*handleFetchPv(pv) {
-        fetchPv(pv).then(response => {
-          this.pvData = response.data.pvData
-          this.dialogPvVisible = true
-        })
-      },*/
+      handleUpdate(row) {
+
+        this.dialogFormVisible = true
+
+      },
       handleDownload() {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {

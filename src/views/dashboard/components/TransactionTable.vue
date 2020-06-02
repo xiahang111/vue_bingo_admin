@@ -1,19 +1,19 @@
 <template>
   <el-table :data="list" style="width: 100%;padding-top: 15px;">
-    <el-table-column label="订单编号" min-width="200">
+    <el-table-column label="订单编号" >
       <template slot-scope="scope">
-        {{ scope.row.orderId | orderNoFilter }}
+        {{ scope.row.orderId }}
       </template>
     </el-table-column>
     <el-table-column label="价格" width="195" align="center">
       <template slot-scope="scope">
-        ¥{{ scope.row.totalPrice | toThousandFilter }}
+        ¥{{ scope.row.totalPrice  }}
       </template>
     </el-table-column>
 
     <el-table-column label="业务员" width="195" align="center">
       <template slot-scope="scope">
-        {{ scope.row.salesman | toThousandFilter }}
+        {{ scope.row.salesman  }}
       </template>
     </el-table-column>
     <el-table-column label="订单状态" width="100" align="center">

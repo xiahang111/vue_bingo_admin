@@ -230,6 +230,32 @@ export const constantRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
+export const asyncRoutes = [
+
+  {
+    path: '/sale',
+    component: Layout,
+    redirect: '/tools/material-calculate',
+    name: 'Example',
+    meta: { title: '销售管理', icon: 'money',roles: ['admin','root'] },
+    children: [
+      {
+        path: 'order',
+        name: '销售订单',
+        component: () => import('@/views/sale/sale-order'),
+        meta: { title: '销售订单' }
+      },
+      {
+        path: 'order',
+        name: '销售退货',
+        component: () => import('@/views/sale/sale-return'),
+        meta: { title: '销售退货' }
+      }
+    ]
+  }
+
+]
+
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

@@ -29,9 +29,18 @@ router.beforeEach((to, from, next) => {
     } else {
       const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
+
         next()
       } else {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
+
+          /*const roles = res.data.name;
+          store.dispatch('GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
+
+            router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+            next() // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
+          })*/
+
           next()
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
