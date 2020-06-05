@@ -63,3 +63,21 @@ export function commitOrder(query) {
     data: query,
   })
 }
+
+export function getOrderByUser(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/getByUser',
+    method: 'post',
+    data: query,
+  })
+}
+
+export function getMaterialVOById(params) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/getMaterialVOById',
+    method: 'get',
+    params
+  })
+}

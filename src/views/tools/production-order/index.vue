@@ -68,6 +68,13 @@
             <el-radio v-model="product.isClear" label="false">不是</el-radio>
           </el-form-item>
         </el-col>
+
+        <el-col span="6">
+          <el-form-item label="有无天地横梁">
+            <el-radio v-model="product.isHaveTransom" label="true">有</el-radio>
+            <el-radio v-model="product.isHaveTransom" label="false">没有</el-radio>
+          </el-form-item>
+        </el-col>
       </el-row>
 
 
@@ -106,7 +113,8 @@
 
         <el-col span="6">
           <el-form-item label="玻璃颜色">
-            <el-select v-model="materialInfo.glassColor" :disabled="product.productType == '2'"  placeholder="无玻璃" style="width: 80%">
+            <el-select v-model="materialInfo.glassColor" :disabled="product.productType == '2'" placeholder="无玻璃"
+                       style="width: 80%">
               <el-option
                 v-for="item in glassColor"
                 :key="item.value"
@@ -119,7 +127,7 @@
 
         <el-col span="6">
           <el-form-item label="拉手种类">
-            <el-select v-model="materialInfo.handleType"  placeholder="请选择" style="width: 80%">
+            <el-select v-model="materialInfo.handleType" placeholder="请选择" style="width: 80%">
               <el-option
                 v-for="item in handleType"
                 :key="item.value"
@@ -133,13 +141,13 @@
       </el-row>
       <el-row>
         <el-col span="6">
-          <el-form-item label="产品高度" v-if="!product.isBatch">
+          <el-form-item label="产品高度">
             <el-input v-model="materialInfo.height" placeholder="请输入" style="width: 80%"/>
           </el-form-item>
         </el-col>
 
         <el-col span="6">
-          <el-form-item label="产品宽度" v-if="!product.isBatch">
+          <el-form-item label="产品宽度">
             <el-input v-model="materialInfo.width" placeholder="请输入" style="width: 80%"/>
           </el-form-item>
         </el-col>
@@ -187,7 +195,8 @@
 
         <el-col span="6">
           <el-form-item label="角码种类">
-            <el-select v-model="materialInfo.cornerMaterial"  placeholder="请选择" style="width: 80%">
+            <el-select v-model="materialInfo.cornerMaterial" :disabled="product.productType == 1" placeholder="请选择"
+                       style="width: 80%">
               <el-option
                 v-for="item in cornerMaterial"
                 :key="item.value"
@@ -219,6 +228,81 @@
       <el-form-item>
         <el-button type="success" @click="addMaterials">添加</el-button>
         <el-button type="info" @click="resetMaterials">清空</el-button>
+      </el-form-item>
+
+      <el-divider content-position="left" v-if="product.isHaveTransom == 'true'">
+        <span style="color: #b4170f">天地横梁信息</span>
+      </el-divider>
+
+      <el-row v-if="product.isHaveTransom == 'true'">
+
+        <el-col span="6">
+          <el-form-item label="横梁种类">
+            <el-select v-model="transomInfo.transomType" placeholder="请选择" style="width: 80%">
+              <el-option
+                v-for="item in transomType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <el-col span="6">
+          <el-form-item label="横梁颜色">
+            <el-select v-model="transomInfo.transomColor" placeholder="请选择" style="width: 80%">
+              <el-option
+                v-for="item in materialColor"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <el-col span="6">
+          <el-form-item label="横梁长度">
+            <el-input v-model="transomInfo.height" placeholder="请输入" style="width: 80%"/>
+          </el-form-item>
+        </el-col>
+
+        <el-col span="6">
+          <el-form-item label="数量">
+            <el-select v-model="transomInfo.transomNum" placeholder="请选择" style="width: 80%">
+              <el-option
+                v-for="item in nums"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+
+      </el-row>
+
+      <el-row v-if="product.isHaveTransom == 'true'">
+
+        <el-col span="6">
+          <el-form-item label="单价￥">
+            <el-input v-model="transomInfo.price" placeholder="请输入" style="width: 80%"/>
+          </el-form-item>
+        </el-col>
+
+        <el-col span="6">
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="transomInfo.remark" placeholder="请输入" style="width: 80%"/>
+          </el-form-item>
+        </el-col>
+
+      </el-row>
+
+      <el-form-item v-if="product.isHaveTransom == 'true'">
+        <el-button type="success" @click="addTransom">添加</el-button>
+        <el-button type="info" @click="resetTransom">清空</el-button>
       </el-form-item>
 
       <el-divider content-position="left">
@@ -408,7 +492,7 @@
       :with-header="false">
       <el-divider><span style="color: #b4170f;font-size: large">产品信息</span></el-divider>
 
-      <el-table :data="product.materials" height="250" :stripe="true" align="center">
+      <el-table :data="product.materials" height="190" :stripe="true" align="center">
         <el-table-column prop="materialType" label="料型号">
           <template slot-scope="scope">
             <span v-if="scope.row.materialType == 1001">联动1号</span>
@@ -451,8 +535,8 @@
             <span v-if="scope.row.handleType == 6">镶嵌168拉手</span>
           </template>
         </el-table-column>
-        <el-table-column prop="glassColor" label="玻璃颜色" >
-          <template slot-scope="scope" >
+        <el-table-column prop="glassColor" label="玻璃颜色">
+          <template slot-scope="scope">
             <span v-if="scope.row.glassColor == 0">无玻璃</span>
             <span v-if="scope.row.glassColor == 1">欧洲灰</span>
             <span v-if="scope.row.glassColor == 2">蓝星灰</span>
@@ -467,8 +551,8 @@
           </template>
         </el-table-column>
 
-        <el-table-column prop="cornerMaterial" label="玻璃颜色" align="center">
-          <template slot-scope="scope" >
+        <el-table-column prop="cornerMaterial" label="角码种类">
+          <template slot-scope="scope">
             <span v-if="scope.row.cornerMaterial == 0">无角码</span>
             <span v-if="scope.row.cornerMaterial == 1">20锌合金角码</span>
             <span v-if="scope.row.cornerMaterial == 2">20铝芯角码</span>
@@ -506,7 +590,7 @@
       <el-divider><span style="color: #b4170f;font-size: large">五金信息</span></el-divider>
 
 
-      <el-table :data="product.ironwares" height="250" :stripe="true" align="center">
+      <el-table :data="product.ironwares" height="190" :stripe="true" align="center">
         <el-table-column prop="ironwareName" label="配件名称" width="120"></el-table-column>
         <el-table-column prop="unit" label="单位" width="120"></el-table-column>
         <el-table-column prop="ironwareColor" label="颜色" width="120">
@@ -535,6 +619,48 @@
         </el-table-column>
       </el-table>
 
+      <el-divider v-if="product.isHaveTransom == 'true'"><span style="color: #b4170f;font-size: large">天地横梁信息</span>
+      </el-divider>
+
+
+      <el-table :data="product.transoms" v-if="product.isHaveTransom == 'true'" height="200" :stripe="true"
+                align="center">
+        <el-table-column prop="transomType" label="横料种类" width="120">
+          <template slot-scope="scope">
+            <span v-if="scope.row.transomType == 1">47天地横梁</span>
+            <span v-if="scope.row.transomType == 2">55天地横梁</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="transomColor" label="横梁颜色" width="120">
+          <template slot-scope="scope">
+            <span v-if="scope.row.transomColor == 1">黄铜拉丝</span>
+            <span v-if="scope.row.transomColor == 2">古铜拉丝</span>
+            <span v-if="scope.row.transomColor == 3">哑黑</span>
+            <span v-if="scope.row.transomColor == 4">瓷沙黑</span>
+            <span v-if="scope.row.transomColor == 5">罗马灰</span>
+            <span v-if="scope.row.transomColor == 6">绅士灰</span>
+            <span v-if="scope.row.transomColor == 7">拉丝黑</span>
+            <span v-if="scope.row.transomColor == 8">拉丝灰</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="height" label="横梁长度" width="120"></el-table-column>
+        <el-table-column prop="transomNum" label="数量" width="120"></el-table-column>
+        <el-table-column prop="price" label="单价" width="120"></el-table-column>
+        <el-table-column prop="remark" label="备注" width="120"></el-table-column>
+
+
+        <el-table-column label="操作" width="120">
+          <template slot-scope="scope">
+            <el-button
+              @click.native.prevent="deleteRow(scope.$index, product.transoms)"
+              type="text"
+              size="small">
+              移除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
 
     </el-drawer>
 
@@ -545,6 +671,7 @@
 <script>
 
   import {getAllProduct, commitOrder} from '../../../api/product.js'
+
 
   export default {
     data() {
@@ -562,12 +689,14 @@
         }
       };
 
+
       return {
         drawer: false,
         isDirectSelect: false,
 
         product: {
           isClear: 'true',
+          isHaveTransom: 'false',
           productType: '1',
           customerName: '',
           customerNick: '',
@@ -576,6 +705,7 @@
           express: '',
           materials: [],//材玻信息
           ironwares: [],//五金信息
+          transoms: [],
           bigPackageNum: '',
           simplePackageNum: '',
           orderDate: '',
@@ -598,7 +728,7 @@
           materialNum: '',
           handlePlace: '',
           direction: '',//开启方向
-          cornerMaterial: '',
+          cornerMaterial: '0',
           remark: '',
           price: '',
           area: '',//面积
@@ -616,6 +746,15 @@
           remark: '',
           totalPrice: ''
         },
+
+        transomInfo: {
+          transomType: '',
+          transomColor: '',
+          height: '',
+          transomNum: '',
+          price: '',
+          remark: ''
+        },
         directions: [{value: '对开', label: '对开'},
           {value: '左开', label: '左开'},
           {value: '右开', label: '右开'},
@@ -629,7 +768,7 @@
           {value: '6', label: '绅士灰'},
           {value: '7', label: '拉丝黑'},
           {value: '8', label: '拉丝灰'}],
-        glassColor: [{value: '0', label: '无玻璃'},{value: '1', label: '欧洲灰'},
+        glassColor: [{value: '0', label: '无玻璃'}, {value: '1', label: '欧洲灰'},
           {value: '2', label: '蓝星灰'},
           {value: '3', label: '金茶'},
           {value: '4', label: '浅茶'},
@@ -642,10 +781,11 @@
           {value: '1', label: '黑色'},
           {value: '2', label: '灰色'},
           {value: '3', label: '金色'}],
-        cornerMaterial: [{value: '0', label: '无角码'},{value: '1', label: '20锌合金角码'},
-          {value: '2', label: '20铝芯角码'},{value: '3', label: '22锌合金角码'},
-          {value: '4', label: '22铝芯角码'},{value: '5', label: '上品角码'},
-          {value: '6', label: '联动1号锌合金角码'},{value: '7', label: '联动2号铁片角码'},{value: '8', label: '联动3号铁片角码'}],
+        transomType: [{value: '1', label: '47天地横梁'}, {value: '2', label: '55天地横梁'}],
+        cornerMaterial: [{value: '0', label: '无角码'}, {value: '1', label: '20锌合金角码'},
+          {value: '2', label: '20铝芯角码'}, {value: '3', label: '22锌合金角码'},
+          {value: '4', label: '22铝芯角码'}, {value: '5', label: '上品角码'},
+          {value: '6', label: '联动1号锌合金角码'}, {value: '7', label: '联动2号铁片角码'}, {value: '8', label: '联动3号铁片角码'}],
         salesMans: [{value: '', lable: ''},],
         nums: [{value: '0', label: '0'}, {value: '1', label: '1'}, {value: '2', label: '2'}, {
           value: '3',
@@ -745,6 +885,8 @@
         rows.splice(index, 1);
       },
 
+
+
       handleDelete(index, row) {
         console.log(index, row)
         this.productResultList.splice(index, 1)
@@ -790,6 +932,7 @@
                 this.product.customerPhoneNum = ''
                 this.product.materials = []
                 this.product.ironwares = []
+                this.product.transoms = []
                 this.product.bigPackageNum = ''
                 this.product.simplePackageNum = ''
                 this.product.orederDate = ''
@@ -800,6 +943,14 @@
                 this.product.salesman = ''
                 this.product.orderMaker = ''
                 this.product.remark = ''
+                this.transomInfo = {
+                  transomType: '',
+                  transomColor: '',
+                  height: '',
+                  transomNum: '',
+                  price: '',
+                  remark: ''
+                }
                 this.materialInfo = {
                   materialColor: '',
                   materialType: '',
@@ -872,6 +1023,7 @@
         this.product.customerPhoneNum = ''
         this.product.materials = []
         this.product.ironwares = []
+        this.product.transoms = []
         this.product.bigPackageNum = ''
         this.product.simplePackageNum = ''
         this.product.orederDate = ''
@@ -880,22 +1032,30 @@
         this.product.salesman = ''
         this.product.orderMaker = ''
         this.product.remark = ''
-        this.materialInfo = {
-          materialColor: '',
-          materialType: '',
-          handleType: '',
-          glassColor: '0',
+        this.transomInfo = {
+          transomType: '',
+          transomColor: '',
           height: '',
-          width: '',
-          hingeLocation: '',
-          materialNum: '',
-          handlePlace: '',
-          direction: '',//开启方向
-          remark: '',
+          transomNum: '',
           price: '',
-          area: '',//面积
-          totalPrice: ''
+          remark: ''
         },
+          this.materialInfo = {
+            materialColor: '',
+            materialType: '',
+            handleType: '',
+            glassColor: '0',
+            height: '',
+            width: '',
+            hingeLocation: '',
+            materialNum: '',
+            handlePlace: '',
+            direction: '',//开启方向
+            remark: '',
+            price: '',
+            area: '',//面积
+            totalPrice: ''
+          },
           this.ironwareInfo = {
             ironwareName: '',
             unit: '',
@@ -912,6 +1072,58 @@
           message: '数据清空成功!',
           type: 'success'
         })
+      },
+
+      addTransom() {
+        var isValid = true;
+        var info = this.transomInfo;
+
+        if (info.transomType == undefined || info.transomType == '') {
+
+          isValid = false;
+
+        }
+        if (info.transomColor == undefined || info.transomColor == '') {
+
+          isValid = false;
+
+        }
+        if (info.height == undefined || info.height == '') {
+          isValid = false;
+        }
+
+        if (info.transomNum == undefined || info.transomNum == '') {
+          isValid = false;
+        }
+        if (info.price == undefined || info.price == '') {
+          isValid = false;
+        }
+
+        if (isValid) {
+
+          var transomInfo = {}
+
+          transomInfo.transomType = this.transomInfo.transomType;
+          transomInfo.transomColor = this.transomInfo.transomColor;
+          transomInfo.height = this.transomInfo.height;
+          transomInfo.transomNum = this.transomInfo.transomNum;
+          transomInfo.remark = this.transomInfo.remark;
+          transomInfo.price = this.transomInfo.price;
+
+
+          this.product.transoms.push(transomInfo)
+          this.$message({
+            message: '添加成功！完成后记得点提交哦',
+            type: 'success'
+          })
+
+        } else {
+          this.$message({
+            message: '请先完善横料信息哦~!',
+            type: 'warning'
+          })
+        }
+
       },
       addMaterials() {
 
@@ -974,13 +1186,23 @@
           })
         } else {
           this.$message({
-            message: '请先完善材玻信息哦~!',
+            message: '请先完善产品信息哦~!',
             type: 'warning'
           })
 
         }
 
 
+      },
+
+      resetTransom() {
+
+        this.transomInfo.transomType = '',
+          this.transomInfo.transomColor = '',
+          this.transomInfo.height = '',
+          this.transomInfo.transomNum = '',
+          this.transomInfo.price = '',
+          this.transomInfo.remark = ''
       },
       resetMaterials() {
         this.materialInfo.materialColor = '';

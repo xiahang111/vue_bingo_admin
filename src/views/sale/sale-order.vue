@@ -3,32 +3,16 @@
     <div class="filter-container">
       <el-input v-model="listQuery.title" :placeholder="$t('table.title')" style="width: 200px;" class="filter-item"
                 @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px"
-                 class="filter-item">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item"/>
-      </el-select>
-      <el-select v-model="listQuery.type" :placeholder="$t('table.type')" clearable class="filter-item"
-                 style="width: 130px">
-        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'"
-                   :value="item.key"/>
-      </el-select>
-      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key"/>
-      </el-select>
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
-                 @click="handleCreate">
-        {{ $t('table.add') }}
-      </el-button>
+
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
                  @click="handleDownload">
         {{ $t('table.export') }}
       </el-button>
-      <el-checkbox v-model="showReviewer" class="filter-item" style="margin-left:15px;" @change="tableKey=tableKey+1">
-        {{ $t('table.reviewer') }}
-      </el-checkbox>
+
     </div>
 
     <el-table
@@ -41,19 +25,19 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column label="订单编号" prop="id" sortable="custom" align="center" width="280"
-                       :class-name="getSortClass('id')">
+
+      <el-table-column label="订单编号" prop="id" sortable="custom" align="center" width="280">
         <template slot-scope="{row}">
           <span>{{ row.orderId }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="业务员"  align="center">
+      <el-table-column label="业务员" align="center">
         <template slot-scope="{row}">
           <span>{{ row.salesman }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="制单人"  align="center">
+      <el-table-column label="制单人" align="center">
         <template slot-scope="{row}">
           <span>{{ row.orderMaker }}</span>
         </template>
@@ -61,23 +45,25 @@
 
       <el-table-column label="订单类型" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.productType }}</span>
+          <span>{{ row.productType == 'Complete' ? "成品" : "半成品"}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="总金额"  align="center">
+      <el-table-column label="总金额" align="center">
         <template slot-scope="{row}">
           <span style="color: #f4516c">{{ row.totalPrice }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="日期"  align="center">
+
+      <el-table-column label="下单日期" :formatter="formatDate" align="center">
         <template slot-scope="{row}">
-          <span style="color: #f4516c">{{ row.orderDate }}</span>
+          <span style="color: #f4516c">{{ row.createTime }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" class-name="status-col" align="center" >
+
+      <!-- <el-table-column label="状态" class-name="status-col" align="center" >
         <template slot-scope="{row}">
           <el-tag :type="success" v-if="row.status == 0">
             进行中
@@ -89,19 +75,20 @@
             已退款
           </el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
+
 
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
-          <el-button @click="handleUpdate(scope.row)" type="text" size="small"  >详情</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button @click="getMaterial(scope.row)" type="text" size="small">详情</el-button>
+          <!--<el-button type="text" size="small">编辑</el-button>-->
         </template>
       </el-table-column>
 
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
-                @pagination="getList"/>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.currentPage" :limit.sync="listQuery.pageSize"
+                @pagination="fetchData"/>
 
     <el-dialog title="" :visible.sync="dialogFormVisible">
       <el-divider content-position="left"><span style="color: #b4170f;font-size: large">产品信息</span></el-divider>
@@ -170,7 +157,7 @@
         <el-table-column prop="direction" label="开启方向" width="110"></el-table-column>
         <el-table-column prop="price" label="单价"></el-table-column>
         <el-table-column prop="remark" label="备注"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <!-- <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="deleteRow(scope.$index, product.materials)"
@@ -179,7 +166,7 @@
               移除
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
 
       </el-table>
 
@@ -204,7 +191,7 @@
         <el-table-column prop="totalPrice" label="金额" width="120"></el-table-column>
         <el-table-column prop="remark" label="备注" width="120"></el-table-column>
 
-        <el-table-column label="操作" width="120">
+        <!-- <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="deleteRow(scope.$index, product.ironwares)"
@@ -213,7 +200,7 @@
               移除
             </el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
     </el-dialog>
 
@@ -231,14 +218,16 @@
 
 <script>
   import waves from '@/directive/waves' // waves directive
-  import { parseTime } from '@/utils'
+  import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  import {getOrderByUser, getMaterialVOById} from '@/api/product.js'
+
 
   const calendarTypeOptions = [
-    { key: 'CN', display_name: 'China' },
-    { key: 'US', display_name: 'USA' },
-    { key: 'JP', display_name: 'Japan' },
-    { key: 'EU', display_name: 'Eurozone' }
+    {key: 'CN', display_name: 'China'},
+    {key: 'US', display_name: 'USA'},
+    {key: 'JP', display_name: 'Japan'},
+    {key: 'EU', display_name: 'Eurozone'}
   ]
 
   // arr to obj, such as { CN : "China", US : "USA" }
@@ -249,8 +238,8 @@
 
   export default {
     name: 'ComplexTable',
-    components: { Pagination },
-    directives: { waves },
+    components: {Pagination},
+    directives: {waves},
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -267,6 +256,14 @@
     },
     data() {
       return {
+        listQuery: {
+          page: 1,
+          limit: 20,
+          importance: undefined,
+          title: undefined,
+          type: undefined,
+          sort: '+id'
+        },
         product: {
           isClear: 'true',
           productType: '1',
@@ -320,17 +317,20 @@
         total: 0,
         listLoading: true,
         listQuery: {
+          currentPage: 1,
+          pageSize: 10,
           page: 1,
           limit: 20,
           importance: undefined,
           title: undefined,
           type: undefined,
-          sort: '+id'
+          sort: '+id',
+          keyword: ''
         },
         importanceOptions: [1, 2, 3],
         calendarTypeOptions,
-        sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-        statusOptions: ['进行中', '已完成', '已退款','退单'],
+        sortOptions: [{label: 'ID Ascending', key: '+id'}, {label: 'ID Descending', key: '-id'}],
+        statusOptions: ['进行中', '已完成', '已退款', '退单'],
         showReviewer: false,
         temp: {
           id: undefined,
@@ -350,20 +350,27 @@
         dialogPvVisible: false,
         pvData: [],
         rules: {
-          type: [{ required: true, message: 'type is required', trigger: 'change' }],
-          timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+          type: [{required: true, message: 'type is required', trigger: 'change'}],
+          timestamp: [{type: 'date', required: true, message: 'timestamp is required', trigger: 'change'}],
+          title: [{required: true, message: 'title is required', trigger: 'blur'}]
         },
         downloadLoading: false
       }
     },
     created() {
-      this.getList()
+      this.fetchData()
     },
     methods: {
       filterStatus(value, row) {
         return row.status === value
       },
+      formatDate(value) {
+
+        this.value1 = new Date(value.createdTime);//value.createdTime是prop绑定的字段名称
+        let dateValue = this.$moment(this.value1).format("YYYY-MM-DD");//$moment专门转化时间的插件（使用时需要下载引入）
+        return dateValue
+      }
+      ,
       getList() {
         this.listLoading = false
         this.list = [{
@@ -374,7 +381,7 @@
           totalPrice: '3897',
           orderDate: '2020-05-31',
           status: '1'
-        },{
+        }, {
           orderId: '门-2004012',
           salesman: '王进喜',
           orderMaker: '刘华荣',
@@ -382,7 +389,7 @@
           totalPrice: '3897',
           orderDate: '2020-05-31',
           status: '2'
-        },{
+        }, {
           orderId: '门-2004014',
           salesman: '王进喜',
           orderMaker: '刘华荣',
@@ -392,6 +399,52 @@
           status: '0'
         }]
         this.total = this.list.length
+
+      },
+
+      getMaterial(row) {
+
+        var param = {};
+        param.orderUid = row.uid
+
+        getMaterialVOById(param).then(
+          response => {
+            if (response.code == "success") {
+              this.product = response.data;
+              this.dialogFormVisible = true
+            }else {
+              this.$message({
+                message: '获取详情失败！',
+                type: 'warn'
+              })
+            }
+
+
+          }
+        )
+
+
+      },
+
+      fetchData() {
+        this.listLoading = true
+
+        var params = {};
+        params.currentPage = this.listQuery.currentPage;
+        params.keyword = this.listQuery.keyword;
+        params.pageSize = this.listQuery.pageSize;
+        params.toString();
+
+        getOrderByUser(params).then(
+          response => {
+            console.log('head获取网站配置', response)
+            if (response.code == 'success') {
+              this.list = response.data.records
+              this.total = response.data.total
+              this.listLoading = false
+            }
+          }
+        )
 
       },
       handleFilter() {
@@ -406,7 +459,7 @@
         row.status = status
       },
       sortChange(data) {
-        const { prop, order } = data
+        const {prop, order} = data
         if (prop === 'id') {
           this.sortByID(order)
         }
@@ -456,15 +509,7 @@
           }
         })
       },
-      handleUpdate(row) {
-        this.temp = Object.assign({}, row) // copy obj
-        this.temp.timestamp = new Date(this.temp.timestamp)
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
+
       updateData() {
         this.$refs['dataForm'].validate((valid) => {
           if (valid) {
@@ -493,11 +538,7 @@
         })
         this.list.splice(index, 1)
       },
-      handleUpdate(row) {
 
-        this.dialogFormVisible = true
-
-      },
       handleDownload() {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
@@ -521,7 +562,7 @@
           }
         }))
       },
-      getSortClass: function(key) {
+      getSortClass: function (key) {
         const sort = this.listQuery.sort
         return sort === `+${key}` ? 'ascending' : 'descending'
       }
