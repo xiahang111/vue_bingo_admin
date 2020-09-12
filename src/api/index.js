@@ -9,6 +9,14 @@ export function indexOrderAndSaleCount(query) {
   })
 }
 
+export function getLineData(query) {
+  return request({
+    url: process.env.ADMIN_API + '/index/getLineData',
+    method: 'post',
+    data: query
+  })
+}
+
 export function getIndexOrderInfo(query) {
   return request({
     url: process.env.ADMIN_API + '/index/getIndexOrderInfo',

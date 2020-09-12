@@ -154,14 +154,7 @@
 
         <el-col span="6">
           <el-form-item label="扇数">
-            <el-select v-model="materialInfo.materialNum" placeholder="请选择" style="width: 80%">
-              <el-option
-                v-for="item in nums"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input v-model="materialInfo.materialNum" placeholder="请输入" style="width: 80%"/>
           </el-form-item>
         </el-col>
 
@@ -357,14 +350,7 @@
 
         <el-col span="6">
           <el-form-item label="数量">
-            <el-select v-model="ironwareInfo.ironwareNum" placeholder="请选择" style="width: 80%">
-              <el-option
-                v-for="item in nums"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+            <el-input v-model="ironwareInfo.ironwareNum" placeholder="请输入" style="width: 80%"/>
           </el-form-item>
         </el-col>
 
@@ -479,7 +465,7 @@
         <el-button @click="drawer = true" type="warning" align="right">
           预览
         </el-button>
-        <el-button type="primary" @click="onSubmit('form')">提交</el-button>
+        <el-button type="primary" @click="onSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
         <el-button type="info" @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -530,7 +516,7 @@
             <span v-if="scope.row.handleType == 1">168拉手</span>
             <span v-if="scope.row.handleType == 2">1100拉手</span>
             <span v-if="scope.row.handleType == 3">通体拉手</span>
-            <span v-if="scope.row.handleType == 4">50斜边镶钻拉手</span>
+            <span v-if="scope.row.handleType == 4">50斜边镶嵌拉手</span>
             <span v-if="scope.row.handleType == 5">联动1号后装拉手</span>
             <span v-if="scope.row.handleType == 6">镶嵌168拉手</span>
           </template>
@@ -576,11 +562,18 @@
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
             <el-button
+              @click.native.prevent="updateMaterialhandle(scope.$index,scope.row)"
+              type="text"
+              size="small">
+              修改
+            </el-button>
+            <el-button
               @click.native.prevent="deleteRow(scope.$index, product.materials)"
               type="text"
               size="small">
               移除
             </el-button>
+
           </template>
         </el-table-column>
 
@@ -604,11 +597,17 @@
         <el-table-column prop="specification" label="规格" width="120"></el-table-column>
         <el-table-column prop="ironwareNum" label="数量" width="120"></el-table-column>
         <el-table-column prop="price" label="单价" width="120"></el-table-column>
-        <el-table-column prop="totalPrice" label="金额" width="120"></el-table-column>
+        <!--<el-table-column prop="totalPrice" label="金额" width="120"></el-table-column>-->
         <el-table-column prop="remark" label="备注" width="120"></el-table-column>
 
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
+            <el-button
+              @click.native.prevent="updateIronwareHandle(scope.$index,scope.row)"
+              type="text"
+              size="small">
+              修改
+            </el-button>
             <el-button
               @click.native.prevent="deleteRow(scope.$index, product.ironwares)"
               type="text"
@@ -651,6 +650,7 @@
 
         <el-table-column label="操作" width="120">
           <template slot-scope="scope">
+
             <el-button
               @click.native.prevent="deleteRow(scope.$index, product.transoms)"
               type="text"
@@ -664,6 +664,156 @@
 
     </el-drawer>
 
+    <el-dialog title="" :visible.sync="isUpdateMaterial">
+
+      <el-divider content-position="left">
+        <span style="color: #b4170f">修改材料</span>
+      </el-divider>
+
+      <el-form ref="updateform" :model="materialUpdateinfo" label-width="120px" :rules="rules">
+
+        <el-form-item label="料型号:">
+          <el-select v-model="materialUpdateinfo.materialType" placeholder="请选择" style="width: 80%">
+            <el-option
+              v-for="item in productList"
+              :key="item.uid"
+              :label="item.productName"
+              :value="item.uid">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="料颜色:">
+          <el-select v-model="materialUpdateinfo.materialColor" placeholder="请选择" style="width: 80%">
+            <el-option
+              v-for="item in materialColor"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="拉手类型:">
+          <el-select v-model="materialUpdateinfo.handleType" placeholder="请选择" style="width: 80%">
+            <el-option
+              v-for="item in handleType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="玻璃颜色:">
+          <el-select v-model="materialUpdateinfo.glassColor" placeholder="请选择" style="width: 80%">
+            <el-option
+              v-for="item in glassColor"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="高度:">
+          <el-input v-model="materialUpdateinfo.height" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="宽度:">
+          <el-input v-model="materialUpdateinfo.width" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="扇数:">
+          <el-input v-model="materialUpdateinfo.materialNum" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="合页孔位置:">
+          <el-input v-model="materialUpdateinfo.hingeLocation" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+        <el-form-item label="拉手位置:">
+          <el-input v-model="materialUpdateinfo.handlePlace" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="开启方向:">
+          <el-input v-model="materialUpdateinfo.direction" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+        <el-form-item label="单价:">
+          <el-input v-model="materialUpdateinfo.price" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="备注:">
+          <el-input v-model="materialUpdateinfo.remark" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+
+        <!-- 按钮 -->
+        <el-form-item>
+          <el-button type="primary" @click="updateMaterial()">修改</el-button>
+        </el-form-item>
+
+
+      </el-form>
+
+
+    </el-dialog>
+
+    <el-dialog title="" :visible.sync="isUpdateIronware">
+
+      <el-divider content-position="left">
+        <span style="color: #b4170f">修改五金</span>
+      </el-divider>
+
+      <el-form ref="updateform" :model="ironwareUpdateInfo" label-width="120px" :rules="rules">
+
+        <el-form-item label="五金名称:">
+          <el-input v-model="ironwareUpdateInfo.ironwareName" placeholder="请输入" style="width: 60%"/>
+
+        </el-form-item>
+
+        <el-form-item label="单位:">
+          <el-input v-model="ironwareUpdateInfo.unit" placeholder="请输入" style="width: 60%"/>
+
+        </el-form-item>
+
+        <el-form-item label="五金颜色:">
+          <el-select v-model="ironwareUpdateInfo.ironwareColor" placeholder="请选择" style="width: 80%">
+            <el-option
+              v-for="item in ironwareColor"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="规格:">
+          <el-input v-model="ironwareUpdateInfo.specification" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="数量:">
+          <el-input v-model="ironwareUpdateInfo.ironwareNum" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="单价:">
+          <el-input v-model="ironwareUpdateInfo.price" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <el-form-item label="备注:">
+          <el-input v-model="ironwareUpdateInfo.remark" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
+        <!-- 按钮 -->
+        <el-form-item>
+          <el-button type="primary" @click="updateIronware()">修改</el-button>
+        </el-form-item>
+
+
+      </el-form>
+
+
+    </el-dialog>
+
 
   </div>
 </template>
@@ -671,7 +821,7 @@
 <script>
 
   import {getAllProduct, commitOrder} from '../../../api/product.js'
-
+  import local from '@/utils/storage'
 
   export default {
     data() {
@@ -693,6 +843,9 @@
       return {
         drawer: false,
         isDirectSelect: false,
+        fullscreenLoading: false,
+        isUpdateMaterial: false,
+        isUpdateIronware: false,
 
         product: {
           isClear: 'true',
@@ -716,6 +869,25 @@
           remark: ''
         },
 
+        materialUpdateinfo: {
+          rowNum: '',
+          materialColor: '',
+          materialType: '',
+          handleType: '',
+          glassColor: '',
+          height: '',
+          width: '',
+          hingeLocation: '',
+          materialNum: '',
+          handlePlace: '',
+          direction: '',//开启方向
+          cornerMaterial: '',
+          remark: '',
+          price: '',
+          area: '',//面积
+          totalPrice: ''
+        },
+
         materialInfo: {
 
           materialColor: '',
@@ -736,6 +908,17 @@
 
         },
 
+        ironwareUpdateInfo: {
+          index: '',
+          ironwareName: '',
+          unit: '',
+          ironwareColor: '',
+          specification: '',//规格
+          ironwareNum: '',
+          price: '',
+          remark: '',
+          totalPrice: ''
+        },
         ironwareInfo: {
           ironwareName: '',
           unit: '',
@@ -822,7 +1005,7 @@
         handleType: [{value: '0', label: '无拉手'}, {value: '1', label: '168拉手'},
           {value: '2', label: '1100拉手'},
           {value: '3', label: '通体拉手'},
-          {value: '4', label: '50斜边镶钻拉手'}, {value: '5', label: '联动1号后装拉手'}, {value: '6', label: '镶嵌168拉手'}],
+          {value: '4', label: '50斜边镶嵌拉手'}, {value: '5', label: '联动1号后装拉手'}, {value: '6', label: '镶嵌168拉手'}],
 
         rules: {
           width: [
@@ -886,7 +1069,6 @@
       },
 
 
-
       handleDelete(index, row) {
         console.log(index, row)
         this.productResultList.splice(index, 1)
@@ -909,19 +1091,13 @@
       ,
       onSubmit(formName) {
 
+        this.fullscreenLoading = true;
+
         this.$refs[formName].validate((valid) => {
 
           if (valid) {
 
             commitOrder(this.product).then(response => {
-
-              if (response.code == 'fail') {
-
-                this.$message({
-                  message: response.data,
-                  type: 'warning'
-                })
-              }
 
               if (response.code == 'success') {
                 this.product.isClear = 'true'
@@ -978,6 +1154,7 @@
                     totalPrice: ''
                   }
 
+                this.fullscreenLoading = false;
                 this.$message({
                   message: "添加成功!",
                   type: 'success'
@@ -998,9 +1175,16 @@
                 }
                 window.open(process.env.ADMIN_API + url);
 
+              }else {
+                this.fullscreenLoading = false;
+                this.$message({
+                  message: response.data,
+                  type: 'warning'
+                })
               }
             })
           } else {
+            this.fullscreenLoading = false;
             this.$message({
               message: '请完善表格信息！！!',
               type: 'warning'
@@ -1276,13 +1460,78 @@
         this.ironwareInfo.price = '';
 
       },
+      updateIronwareHandle(index, row) {
+        this.ironwareUpdateInfo = row
+        this.ironwareUpdateInfo.index = index
+        this.isUpdateIronware = true
+      },
+      updateMaterialhandle(index, row) {
+
+        this.materialUpdateinfo = row
+        this.materialUpdateinfo.rowNum = index
+        this.isUpdateMaterial = true;
+
+      },
+
+      updateIronware() {
+        var ironwareUpdate = {}
+        var index = this.ironwareUpdateInfo.index
+        ironwareUpdate.ironwareName = this.ironwareUpdateInfo.ironwareName;
+        ironwareUpdate.unit = this.ironwareUpdateInfo.unit;
+        ironwareUpdate.ironwareColor = this.ironwareUpdateInfo.ironwareColor;
+        ironwareUpdate.specification = this.ironwareUpdateInfo.specification;
+        ironwareUpdate.ironwareNum = this.ironwareUpdateInfo.ironwareNum;
+        ironwareUpdate.price = this.ironwareUpdateInfo.price;
+        ironwareUpdate.remark = this.ironwareUpdateInfo.remark;
+
+        this.product.ironwares.splice(index, 1, ironwareUpdate)
+        this.isUpdateIronware = false;
+      },
+      updateMaterial() {
+        var materialUpdate = {}
+
+        var index = this.materialUpdateinfo.rowNum
+        materialUpdate.materialColor = this.materialUpdateinfo.materialColor;
+        materialUpdate.materialType = this.materialUpdateinfo.materialType;
+        materialUpdate.handleType = this.materialUpdateinfo.handleType;
+        materialUpdate.glassColor = this.materialUpdateinfo.glassColor;
+        materialUpdate.height = this.materialUpdateinfo.height;
+        materialUpdate.width = this.materialUpdateinfo.width;
+        materialUpdate.hingeLocation = this.materialUpdateinfo.hingeLocation;
+        materialUpdate.materialNum = this.materialUpdateinfo.materialNum;
+        materialUpdate.handlePlace = this.materialUpdateinfo.handlePlace;
+        materialUpdate.direction = this.materialUpdateinfo.direction;
+        materialUpdate.cornerMaterial = this.materialUpdateinfo.cornerMaterial;
+        materialUpdate.remark = this.materialUpdateinfo.remark;
+        materialUpdate.price = this.materialUpdateinfo.price;
+
+        this.product.materials.splice(index, 1, materialUpdate);
+        this.isUpdateMaterial = false;
+      }
     },
     created() {
 
+      var productVO = local.get('productVO')
+      if (productVO != undefined && productVO != '') {
+        this.product = productVO;
+
+        if (productVO.isClear) {
+          this.product.isClear = "true"
+        }else {
+          this.product.isClear = "false"
+        }
+
+        this.product.orderDate=new Date(productVO.orderDate)
+        this.product.deliveryDate=new Date(productVO.deliveryDate)
+
+        local.remove('productVO')
+      }
       getAllProduct().then(
         response => {
+
           console.log('head获取网站配置', response)
           if (response.code == 'success') {
+
             this.productList = response.data
           }
         }

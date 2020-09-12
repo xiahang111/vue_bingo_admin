@@ -34,14 +34,16 @@ router.beforeEach((to, from, next) => {
       } else {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
 
-          /*const roles = res.data.name;
-          store.dispatch('GenerateRoutes', { roles }).then(() => { // 生成可访问的路由表
-
+          const roles = res.data.roles;
+          store.dispatch('GenerateRoutes', roles).then(() => { // 生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
-            next() // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
-          })*/
 
-          next()
+            router.options.routes = store.getters.permission_routes
+
+            next({ ...to, replace: true })
+          })
+
+
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')
@@ -50,6 +52,7 @@ router.beforeEach((to, from, next) => {
         })
       }
     }
+
   } else {
     /* has no token*/
 

@@ -1,5 +1,6 @@
 import { login , logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+
 import { asyncRoutes, constantRoutes } from '@/router'
 import { hasPermission } from '@/store/modules/permission'
 
@@ -8,7 +9,8 @@ const user = {
     token: getToken(),
     name: '',
     menu: {},
-    avatar: ''
+    avatar: '',
+    roles: []
   },
 
   mutations: {
@@ -29,7 +31,9 @@ const user = {
     },
     SET_BUTTON_MAP: (state, buttonMap) => {
       state.buttonMap = buttonMap
-    }
+    },
+
+
   },
   actions: {
 
@@ -76,7 +80,7 @@ const user = {
           } else {
             reject('登录已过期，请重新登录!')
           }
-          //commit('SET_NAME', data.name)
+          commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {
@@ -89,6 +93,7 @@ const user = {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
           commit('SET_TOKEN', '')
+          commit('SET_NAME', '')
           commit('SET_ROLES', [])
           removeToken()
           resolve()
@@ -102,6 +107,8 @@ const user = {
     FedLogOut({ commit }) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
+        commit('SET_NAME', '')
+        commit('SET_ROLES', [])
         removeToken()
         resolve()
       })

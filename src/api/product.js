@@ -1,10 +1,10 @@
 import request from '@/utils/request-local'
 
-export function getAllProduct(query) {
+export function getAllProduct(params) {
   return request({
     url: process.env.ADMIN_API + '/product/getAllProduct',
     method: 'get',
-    data: query
+    params
   })
 }
 
@@ -64,6 +64,15 @@ export function commitOrder(query) {
   })
 }
 
+export function commitCBDOrder(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/commitCBDOrder',
+    method: 'post',
+    data: query,
+  })
+}
+
 export function getOrderByUser(query) {
 
   return request({
@@ -81,3 +90,23 @@ export function getMaterialVOById(params) {
     params
   })
 }
+
+export function saveOrderAgain(params) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/saveOrderAgain',
+    method: 'get',
+    params
+  })
+}
+
+export function getGlassInfo(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/product/getGlassInfo',
+    method: 'post',
+    data: query
+  })
+}
+
+

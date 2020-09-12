@@ -1,33 +1,29 @@
-import request from '@/utils/request'
+import request from '@/utils/request-local'
 
-export function getUserList(params) {
+export function getAllUser(query) {
+
   return request({
-    url: process.env.ADMIN_API + '/user/getList',
+    url: process.env.ADMIN_API + '/user/getAllUser',
     method: 'post',
-    data: params
+    data: query
   })
 }
 
-export function editUser(params) {
+export function getAllRole(query) {
+
   return request({
-    url: process.env.ADMIN_API + '/user/edit',
+    url: process.env.ADMIN_API + '/user/getAllRole',
     method: 'post',
-    data: params
+    data: query
   })
 }
 
-export function deleteUser(params) {
+export function saveUser(query) {
+
   return request({
-    url: process.env.ADMIN_API + '/user/delete',
+    url: process.env.ADMIN_API + '/user/saveUser',
     method: 'post',
-    data: params
+    data: query
   })
 }
 
-export function resetUserPassword(params) {
-  return request({
-    url: process.env.ADMIN_API + '/user/resetUserPassword',
-    method: 'post',
-    data: params
-  })
-}

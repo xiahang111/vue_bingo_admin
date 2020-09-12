@@ -51,183 +51,75 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'dashboard', icon: 'dashboard' }
+      meta: {title: 'dashboard', icon: 'dashboard'}
     }]
   },
 
-  {
-    path: '/example',
-    component: Layout,
-    hidden: true,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/sale',
-    component: Layout,
-    redirect: '/tools/material-calculate',
-    name: 'Example',
-    meta: { title: '销售管理', icon: 'money' },
-    children: [
-      {
-        path: 'order',
-        name: '销售订单',
-        component: () => import('@/views/sale/sale-order'),
-        meta: { title: '销售订单' }
-      },
-      {
-        path: 'order',
-        name: '销售退货',
-        component: () => import('@/views/sale/sale-return'),
-        meta: { title: '销售退货' }
-      }
-    ]
-  },
+
   {
     path: '/tools',
     component: Layout,
     redirect: '/tools/material-calculate',
-    name: 'Example',
-    meta: { title: '工具', icon: 'lock' },
+    name: 'tools',
+    meta: {title: '工具', icon: 'lock'},
     children: [
       {
         path: 'production-order',
         name: '订单制作',
         component: () => import('@/views/tools/production-order/index'),
-        meta: { title: '订单制作' }
+        meta: {title: '订单制作'}
+      },
+      {
+        path: 'laminate-order',
+        name: '层板单制作',
+        component: () => import('@/views/tools/laminate-order/index'),
+        meta: {title: '层板单制作'}
       },
       {
         path: 'glass-calculate',
         name: '玻璃计算',
         component: () => import('@/views/tools/glass-calculate/index'),
-        meta: { title: '玻璃计算' }
+        meta: {title: '玻璃计算'}
       },
       {
         path: 'glass-excel',
         name: '玻璃历史记录',
         component: () => import('@/views/tools/glass-calculate/complex-table'),
-        meta: { title: '玻璃计算历史' }
+        meta: {title: '玻璃计算历史'}
       },
       {
         hidden: true,
         path: 'material-calculate',
         name: '下料计算',
         component: () => import('@/views/tools/material-calculate/index'),
-        meta: { title: '型材计算' }
+        meta: {title: '型材计算'}
       },
       {
         hidden: true,
         path: 'material-excel',
         name: '型材计算历史',
         component: () => import('@/views/tools/material-calculate/material-record'),
-        meta: { title: '型材计算历史' }
+        meta: {title: '型材计算历史'}
       }
     ]
   },
-
-
   {
-    path: '/form',
+    path: '/product',
     component: Layout,
-    hidden: true,
+    redirect: '/product/glass-history',
+    name: 'Example',
+    meta: {title: '生产管理', icon: 'monitor'},
     children: [
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'form', icon: 'form' }
+        path: 'glass-history',
+        name: '玻璃历史详情',
+        component: () => import('@/views/product/glass/glass-history'),
+        meta: {title: '玻璃历史详情'}
       }
     ]
   },
-
-  {
-    path: '/nested',
-    component: Layout,
-    hidden: true,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
-
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  //{path: '*', redirect: '/404', hidden: true}
 ]
 
 export const asyncRoutes = [
@@ -236,20 +128,108 @@ export const asyncRoutes = [
     path: '/sale',
     component: Layout,
     redirect: '/tools/material-calculate',
-    name: 'Example',
-    meta: { title: '销售管理', icon: 'money',roles: ['admin','root'] },
+    name: 'sale',
+    meta: {title: '销售管理', icon: 'money', role: ['admin','clerk']},
     children: [
       {
         path: 'order',
         name: '销售订单',
         component: () => import('@/views/sale/sale-order'),
-        meta: { title: '销售订单' }
+        meta: {title: '销售订单', role: ['admin','clerk']}
       },
       {
-        path: 'order',
+        path: 'order-return',
         name: '销售退货',
         component: () => import('@/views/sale/sale-return'),
-        meta: { title: '销售退货' }
+        meta: {title: '销售退货', role: ['admin','clerk']}
+      }
+    ]
+  },{
+    path: '/store',
+    component: Layout,
+    redirect: '/store/store-all',
+    name: 'store',
+    meta: {title: '仓库管理', icon: 'education', role: ['admin','store']},
+    children: [
+
+      {
+        path: 'store-all',
+        name: '库存详情',
+        component: () => import('@/views/store/store-all'),
+        meta: {title: '库存详情', role: ['admin','store']}
+      },
+      {
+        path: 'store-out',
+        name: '出库管理',
+        component: () => import('@/views/store/store-out'),
+        meta: {title: '出库管理', role: ['admin','store']}
+      },
+      {
+        path: 'store-in',
+        name: '入库管理',
+        component: () => import('@/views/store/store-in'),
+        meta: {title: '入库管理', role: ['admin','store']}
+      },
+
+      {
+        path: 'store-original',
+        name: '坯料详情',
+        component: () => import('@/views/store/store-original'),
+        meta: {title: '坯料详情', role: ['admin','store']}
+      },
+      {
+        path: 'store-original-in',
+        name: '坯料入库',
+        component: () => import('@/views/store/store-original-in'),
+        meta: {title: '坯料入库', role: ['admin','store']}
+      },
+      {
+        path: 'store-original-out',
+        name: '坯料出库',
+        component: () => import('@/views/store/store-original-out'),
+        meta: {title: '坯料出库', role: ['admin','store']}
+      }
+    ]
+  },
+  {
+    path: '/person',
+    component: Layout,
+    redirect: '/person/person-all',
+    name: 'person',
+    meta: {title: '资源信息', icon: 'skill', role: ['admin','clerk']},
+    children: [
+      {
+        path: 'person-all',
+        name: '客户信息',
+        component: () => import('@/views/person/person-all'),
+        meta: {title: '客户信息', role: ['admin','clerk']}
+      },
+      {
+        path: 'person-info',
+        name: '上游厂家信息',
+        component: () => import('@/views/person/person-info'),
+        meta: {title: '上游厂家信息', role: ['admin','clerk']}
+      }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/person/user-all',
+    name: 'person',
+    meta: {title: '用户管理', icon: 'user1', role: ['admin']},
+    children: [
+      {
+        path: 'user-all',
+        name: '系统用户管理',
+        component: () => import('@/views/user/user-all'),
+        meta: {title: '系统用户管理', role: ['admin']}
+      },
+      {
+        path: 'role-all',
+        name: '权限信息',
+        component: () => import('@/views/user/role-all'),
+        meta: {title: '权限信息', role: ['admin']}
       }
     ]
   }
@@ -258,7 +238,7 @@ export const asyncRoutes = [
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 

@@ -49,12 +49,35 @@
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="产品类型" prop="orderType">
+
+        <template slot-scope="scope">
+          <span v-if="scope.row.orderType == 'DOORORDER'">玻璃门系列</span>
+          <span v-if="scope.row.orderType == 'CBDORDER'">层板灯系列</span>
+          <span v-if="scope.row.orderType == undefined">玻璃门系列</span>
+        </template>
+
+      </el-table-column>
+
       <el-table-column label="总金额" align="center">
         <template slot-scope="{row}">
           <span style="color: #f4516c">{{ row.totalPrice }}</span>
         </template>
       </el-table-column>
 
+      <el-table-column align="center" label="订单状态" prop="orderStatus">
+
+
+        <template slot-scope="scope">
+          <span v-if="scope.row.orderStatus == 'STAY_CONFIRM'">待确认</span>
+          <span v-if="scope.row.orderStatus == 'CONFIRM'">已确认</span>
+          <span v-if="scope.row.orderStatus == 'MAKING'">制作中</span>
+          <span v-if="scope.row.orderStatus == 'STAY_DELIVER'">待发货</span>
+          <span v-if="scope.row.orderStatus == 'COMPLETE'">已完成</span>
+          <span v-if="scope.row.orderStatus == undefined">已完成</span>
+        </template>
+
+      </el-table-column>
 
       <el-table-column label="下单日期" :formatter="formatDate" align="center">
         <template slot-scope="{row}">
@@ -81,8 +104,10 @@
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click="getMaterial(scope.row)" type="text" size="small">详情</el-button>
+          <el-button @click="toSaveOrderAgain(scope.row)" type="text" size="small">重新下单</el-button>
           <!--<el-button type="text" size="small">编辑</el-button>-->
         </template>
+
       </el-table-column>
 
     </el-table>
@@ -131,7 +156,7 @@
             <span v-if="scope.row.handleType == 1">168拉手</span>
             <span v-if="scope.row.handleType == 2">1100拉手</span>
             <span v-if="scope.row.handleType == 3">通体拉手</span>
-            <span v-if="scope.row.handleType == 4">50斜边镶钻拉手</span>
+            <span v-if="scope.row.handleType == 4">50斜边镶嵌拉手</span>
             <span v-if="scope.row.handleType == 5">联动1号后装拉手</span>
           </template>
         </el-table-column>
@@ -220,7 +245,8 @@
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import {getOrderByUser, getMaterialVOById} from '@/api/product.js'
+  import {getOrderByUser, getMaterialVOById, saveOrderAgain} from '@/api/product.js'
+  import local from '@/utils/storage'
 
 
   const calendarTypeOptions = [
@@ -256,14 +282,7 @@
     },
     data() {
       return {
-        listQuery: {
-          page: 1,
-          limit: 20,
-          importance: undefined,
-          title: undefined,
-          type: undefined,
-          sort: '+id'
-        },
+
         product: {
           isClear: 'true',
           productType: '1',
@@ -318,7 +337,7 @@
         listLoading: true,
         listQuery: {
           currentPage: 1,
-          pageSize: 10,
+          pageSize: 15,
           page: 1,
           limit: 20,
           importance: undefined,
@@ -401,6 +420,32 @@
         this.total = this.list.length
 
       },
+      toSaveOrderAgain(row) {
+        var param = {}
+
+        param.orderUid = row.uid
+
+        saveOrderAgain(param).then(response => {
+
+          if (response.code == "success") {
+
+            local.set('productVO',response.data.productVO)
+
+            if (response.data.orderType == 2){
+              this.$router.push({path:'/tools/laminate-order'})
+            } else {
+              this.$router.push({path:'/tools/production-order'})
+            }
+
+          } else {
+            this.$message({
+              message: '再下单失败！！',
+              type: 'warn'
+            })
+          }
+
+        })
+      },
 
       getMaterial(row) {
 
@@ -412,7 +457,7 @@
             if (response.code == "success") {
               this.product = response.data;
               this.dialogFormVisible = true
-            }else {
+            } else {
               this.$message({
                 message: '获取详情失败！',
                 type: 'warn'
