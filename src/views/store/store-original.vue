@@ -44,9 +44,9 @@
                      @click="resetQuery">
             {{ '清空' }}
           </el-button>
-         <!-- <el-button v-waves class="filter-item" type="primary" align="right" @click="storeRecordDialog">
+          <el-button v-waves class="filter-item" type="primary" align="right" @click="storeRecordDialog">
             {{ '新增材料' }}
-          </el-button> -->
+          </el-button>
 
 
 
@@ -148,51 +148,37 @@
         <span style="color: #b4170f">新增材料</span>
       </el-divider>
 
-      <el-form ref="form" :model="storeSummary" label-width="120px" :rules="rules">
+      <el-form ref="form" :model="storeOrigin" label-width="120px" :rules="rules">
 
         <el-form-item label="材料名称:">
-          <el-input v-model="storeSummary.materialName" placeholder="请输入" style="width: 60%"/>
-        </el-form-item>
-
-        <el-form-item label="材料颜色:">
-          <el-select v-model="storeSummary.materialColor" placeholder="请选择" style="width: 60%">
-            <el-option
-              v-for="item in materialColor"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
-            </el-option>
-          </el-select>
+          <el-input v-model="storeOrigin.materialName" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="规格:">
-          <el-input v-model="storeSummary.specification" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOrigin.specification" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="单位:">
-          <el-input v-model="storeSummary.unit" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOrigin.unit" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="单价:">
-          <el-input v-model="storeSummary.price" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOrigin.price" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="支重:">
-          <el-input v-model="storeSummary.weight" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOrigin.weight" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="数量:">
-          <el-input v-model="storeSummary.materialNum" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOrigin.materialNum" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
-
-
-
 
         <!-- 按钮 -->
         <el-form-item>
 
           <el-button type="primary" @click="onSubmit('form')">提交</el-button>
-          <el-button type="info" @click="">取消</el-button>
+          <el-button type="info" @click="onCancel">取消</el-button>
         </el-form-item>
 
 
@@ -207,26 +193,26 @@
         <span style="color: #b4170f">修改材料</span>
       </el-divider>
 
-      <el-form ref="updateform" :model="storeSummaryInfo" label-width="120px" :rules="rules">
+      <el-form ref="updateform" :model="storeOriginInfo" label-width="120px" :rules="rules">
 
         <el-form-item label="材料名称:">
-          <el-input v-model="storeSummaryInfo.materialName" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOriginInfo.materialName" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="规格:">
-          <el-input v-model="storeSummaryInfo.specification" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOriginInfo.specification" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="单位:">
-          <el-input v-model="storeSummaryInfo.unit" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOriginInfo.unit" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="单价:">
-          <el-input v-model="storeSummaryInfo.price" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOriginInfo.price" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
         <el-form-item label="支重:">
-          <el-input v-model="storeSummaryInfo.weight" placeholder="请输入" style="width: 60%"/>
+          <el-input v-model="storeOriginInfo.weight" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
 
@@ -259,7 +245,7 @@
 <script>
 
   import waves from '@/directive/waves' // waves directive
-  import { getStoreSummary , saveStoreSummary, deleteStoreSummary, getStoreOrigin } from '@/api/store.js'
+  import {  saveStoreOrigin, getStoreOrigin ,deleteStoreOrigin} from '@/api/store.js'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -296,11 +282,10 @@
     data() {
       return {
 
-        storeSummary: {
+        storeOrigin: {
 
           materialName: '',
           materialNum: '',
-          materialColor: '',
           specification: '',
           unit: '',
           price: '',
@@ -308,7 +293,7 @@
 
         },
 
-        storeSummaryInfo: {
+        storeOriginInfo: {
           uid:'',
           materialName: '',
           materialNum: '',
@@ -412,12 +397,12 @@
       },
       updateStoreInfo(row){
 
-        this.storeSummaryInfo.uid = row.uid
-        this.storeSummaryInfo.materialName = row.materialName
-        this.storeSummaryInfo.specification = row.specification
-        this.storeSummaryInfo.unit = row.unit
-        this.storeSummaryInfo.price = row.price
-        this.storeSummaryInfo.weight = row.weight
+        this.storeOriginInfo.uid = row.uid
+        this.storeOriginInfo.materialName = row.materialName
+        this.storeOriginInfo.specification = row.specification
+        this.storeOriginInfo.unit = row.unit
+        this.storeOriginInfo.price = row.price
+        this.storeOriginInfo.weight = row.weight
 
         this.updateStoreSummary = true;
       },
@@ -465,6 +450,10 @@
         this.getList()
       },
 
+      cancleAddMaterial(){
+        this.dialogFormVisible = false;
+      },
+
 
       storeRecordDialog() {
 
@@ -473,7 +462,7 @@
       },
       onSubmit(formName) {
 
-        saveStoreSummary(this.storeSummary).then(response => {
+        saveStoreOrigin(this.storeOrigin).then(response => {
 
 
           if (response.code == 'fail') {
@@ -486,13 +475,13 @@
 
           if (response.code == 'success') {
 
-            this.storeSummary.materialName = ''
-            this.storeSummary.materialNum = ''
-            this.storeSummary.materialColor = ''
-            this.storeSummary.specification = ''
-            this.storeSummary.unit = ''
-            this.storeSummary.price = ''
-            this.storeSummary.weight = ''
+            this.storeOrigin.materialName = ''
+            this.storeOrigin.materialNum = ''
+            this.storeOrigin.materialColor = ''
+            this.storeOrigin.specification = ''
+            this.storeOrigin.unit = ''
+            this.storeOrigin.price = ''
+            this.storeOrigin.weight = ''
 
 
             this.dialogFormVisible = false;
@@ -512,9 +501,9 @@
 
       deleteSubmit(){
 
-        this.storeSummaryInfo.uid = this.deleteStoreUid
+        this.storeOriginInfo.uid = this.deleteStoreUid
 
-        deleteStoreSummary(this.storeSummaryInfo).then(response  => {
+        deleteStoreOrigin(this.storeOriginInfo).then(response  => {
 
           if (response.code == 'fail') {
 
@@ -530,15 +519,16 @@
               type: 'success'
             })
 
-            this.storeSummaryInfo.uid = ''
+            this.storeOriginInfo.uid = ''
             location.reload();
+
           }
         })
       },
 
       updateSubmit(formName) {
 
-        saveStoreSummary(this.storeSummaryInfo).then(response => {
+        saveStoreOrigin(this.storeOriginInfo).then(response => {
 
 
           if (response.code == 'fail') {
@@ -551,13 +541,13 @@
 
           if (response.code == 'success') {
 
-            this.storeSummary.materialName = ''
-            this.storeSummary.materialNum = ''
-            this.storeSummary.materialColor = ''
-            this.storeSummary.specification = ''
-            this.storeSummary.unit = ''
-            this.storeSummary.price = ''
-            this.storeSummary.weight = ''
+            this.storeOrigin.materialName = ''
+            this.storeOrigin.materialNum = ''
+            this.storeOrigin.materialColor = ''
+            this.storeOrigin.specification = ''
+            this.storeOrigin.unit = ''
+            this.storeOrigin.price = ''
+            this.storeOrigin.weight = ''
 
 
             this.dialogFormVisible = false;
@@ -576,22 +566,22 @@
       },
       onCancel(){
 
-        this.storeSummary.materialName = ''
-        this.storeSummary.materialNum = ''
-        this.storeSummary.materialColor = ''
-        this.storeSummary.specification = ''
-        this.storeSummary.unit = ''
-        this.storeSummary.price = ''
-        this.storeSummary.weight = ''
+        this.storeOrigin.materialName = ''
+        this.storeOrigin.materialNum = ''
+        this.storeOrigin.materialColor = ''
+        this.storeOrigin.specification = ''
+        this.storeOrigin.unit = ''
+        this.storeOrigin.price = ''
+        this.storeOrigin.weight = ''
 
-        this.storeSummaryInfo.uid = ''
-        this.storeSummaryInfo.materialName = ''
-        this.storeSummaryInfo.materialNum = ''
-        this.storeSummaryInfo.materialColor = ''
-        this.storeSummaryInfo.specification = ''
-        this.storeSummaryInfo.unit = ''
-        this.storeSummaryInfo.price = ''
-        this.storeSummaryInfo.weight = ''
+        this.storeOriginInfo.uid = ''
+        this.storeOriginInfo.materialName = ''
+        this.storeOriginInfo.materialNum = ''
+        this.storeOriginInfo.materialColor = ''
+        this.storeOriginInfo.specification = ''
+        this.storeOriginInfo.unit = ''
+        this.storeOriginInfo.price = ''
+        this.storeOriginInfo.weight = ''
       },
     }
   }

@@ -63,10 +63,28 @@ export function saveStoreSummary(query) {
   })
 }
 
+export function saveStoreOrigin(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store/saveStoreOrigin',
+    method: 'post',
+    data: query
+  })
+}
+
 export function deleteStoreSummary(query) {
 
   return request({
     url: process.env.ADMIN_API + '/store/deleteStoreSummary',
+    method: 'post',
+    data: query
+  })
+}
+
+export function deleteStoreOrigin(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store/deleteStoreOrigin',
     method: 'post',
     data: query
   })
