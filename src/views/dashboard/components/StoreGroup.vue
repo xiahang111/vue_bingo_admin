@@ -7,9 +7,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            今日订单数
+            总库存重量
           </div>
-          <count-to :start-val="0" :end-val=info.dayOrderNums :duration="2600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=storeDatas.storeTotalWeight :duration="2600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -20,9 +20,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            本月订单数
+            总库存数量
           </div>
-          <count-to :start-val="0" :end-val=info.monthOrderNums :duration="3000" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=storeDatas.storeTotalNum :duration="3000" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -34,9 +34,9 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            今日销售额
+            总库存价值
           </div>
-          <count-to :start-val="0" :end-val=info.daySaleNums :duration="3200" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=storeDatas.storeTotalPrice :duration="3200" class="card-panel-num" />
         </div>
       </div>
     </el-col>
@@ -47,29 +47,37 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            本月销售额
+            总库存种类
           </div>
-          <count-to :start-val="0" :end-val=info.monthSaleNums :duration="3600" class="card-panel-num" />
+          <count-to :start-val="0" :end-val=storeDatas.storeTotalType :duration="3600" class="card-panel-num" />
         </div>
       </div>
     </el-col>
   </el-row>
+
 </template>
 
 <script>
 import CountTo from 'vue-count-to'
 import { indexOrderAndSaleCount } from '../../../api/index'
+import { getLineData,getStoreTotalData } from '@/api/index'
 
 
 export default {
-
-
-
   data () {
     return {
-      info:{}
+      info:{},
+      storeDatas:{
+        storeTotalWeight:1,
+        storeTotalNum:0,
+        storeTotalPrice:0,
+        storeTotalType:0
+      },
+      type:''
     }
   },
+  props:['type'],
+
   components: {
     CountTo
   },
@@ -79,16 +87,37 @@ export default {
     }
   },
   created() {
-
-    indexOrderAndSaleCount().then(
+    getStoreTotalData().then(
       response => {
-        console.log("head获取网站配置", response);
-        if (response.code == "success") {
-          this.info = response.data
+        if (this.type == 'summary'){
+          let dataList = response.data;
+          if(dataList[0].storeType == "summary"){
+            this.storeDatas.storeTotalWeight = dataList[0].storeTotalWeight;
+            this.storeDatas.storeTotalNum = dataList[0].storeTotalNum;
+            this.storeDatas.storeTotalPrice = dataList[0].storeTotalPrice;
+            this.storeDatas.storeTotalType = dataList[0].storeTotalType;
+          }else {
+            this.storeDatas.storeTotalWeight = dataList[1].storeTotalWeight;
+            this.storeDatas.storeTotalNum = dataList[1].storeTotalNum;
+            this.storeDatas.storeTotalPrice = dataList[1].storeTotalPrice;
+            this.storeDatas.storeTotalType = dataList[1].storeTotalType;
+          }
+        }else {
+          let dataList = response.data;
+          if(dataList[0].storeType == "origin"){
+            this.storeDatas.storeTotalWeight = dataList[0].storeTotalWeight;
+            this.storeDatas.storeTotalNum = dataList[0].storeTotalNum;
+            this.storeDatas.storeTotalPrice = dataList[0].storeTotalPrice;
+            this.storeDatas.storeTotalType = dataList[0].storeTotalType;
+          }else {
+            this.storeDatas.storeTotalWeight = dataList[1].storeTotalWeight;
+            this.storeDatas.storeTotalNum = dataList[1].storeTotalNum;
+            this.storeDatas.storeTotalPrice = dataList[1].storeTotalPrice;
+            this.storeDatas.storeTotalType = dataList[1].storeTotalType;
+          }
         }
       }
     )
-
 
   }
 }

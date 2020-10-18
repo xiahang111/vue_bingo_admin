@@ -6,6 +6,7 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   //开发环境
   ADMIN_API: '"http://localhost:8501/api-web"',
+  DATA_API: '"http://localhost:8503/api-data"',
   PERSON_API: '"http://localhost:8502/api-person"',
   before: require('../mock/mock-server.js')
 

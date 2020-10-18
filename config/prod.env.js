@@ -5,6 +5,7 @@ module.exports = {
   //生产环境
   ADMIN_API: '"http://178.236.44.94:8501/api-web"',
   PERSON_API: '"http://178.236.44.94:8502/api-person"',
+  DATA_API: '"http://178.236.44.94:8503/api-data"',
   // PICTURE_API: '"http://47.115.54.30:8602"',
   // WEB_API: '"http://47.115.54.30:8603"',
   // Search_API: '"http://47.115.54.30:8605"',

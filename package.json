@@ -13,6 +13,7 @@
     "test": "npm run lint"
   },
   "dependencies": {
+    "@jiaminghi/data-view": "^2.10.0",
     "axios": "0.18.1",
     "ckeditor": "^4.10.1",
     "codemirror": "^5.51.0",
@@ -26,6 +27,7 @@
     "screenfull": "^3.3.3",
     "tui-editor": "^1.4.10",
     "vue": "2.5.17",
+    "vue-awesome": "^4.1.0",
     "vue-count-to": "^1.0.13",
     "vue-cropper": "^0.5.0",
     "vue-draggable": "^2.0.6",
