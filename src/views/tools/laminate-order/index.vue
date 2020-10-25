@@ -105,12 +105,27 @@
           </el-form-item>
         </el-col>
 
-        <el-col span="6">
+        <el-col span="6" v-if="laminate.materialType != '8003'">
           <el-form-item label="玻璃颜色">
             <el-select v-model="laminate.glassColor" :disabled="product.productType == '2'" placeholder="无玻璃"
                        style="width: 80%">
               <el-option
                 v-for="item in glassColor"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+
+        <!-- <el-col span="6" v-if="equalCursorPos(laminate.materialType,'酒格层板')"> -->
+        <el-col span="6" v-if="laminate.materialType == '8003'">
+          <el-form-item label="单管双管类型" prop="remark">
+            <el-select v-model="laminate.pipeType" placeholder="请选择"
+                       style="width: 80%">
+              <el-option
+                v-for="item in pipeType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -171,7 +186,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col span="6">
+        <el-col span="6" v-if="laminate.materialType != '8003'">
           <el-form-item label="灯颜色" prop="remark">
             <el-select v-model="laminate.lightColor" placeholder="请选择"
                        style="width: 80%">
@@ -185,7 +200,7 @@
           </el-form-item>
         </el-col>
 
-        <el-col span="6">
+        <el-col span="6" v-if="laminate.materialType != '8003'">
           <el-form-item label="线颜色" prop="remark">
             <el-select v-model="laminate.lineColor" placeholder="请选择"
                        style="width: 80%">
@@ -237,7 +252,6 @@
 
 
         <el-col span="6">
-
           <el-form-item label="配件颜色" prop="materialColor">
             <el-select v-model="ironwareInfo.ironwareColor" placeholder="请选择" style="width: 80%">
               <el-option
@@ -255,8 +269,6 @@
             <el-input v-model="ironwareInfo.remark" placeholder="请输入" style="width: 80%"/>
           </el-form-item>
         </el-col>
-
-
       </el-row>
 
       <el-row>
@@ -368,7 +380,14 @@
 
         <el-col span="6">
           <el-form-item label="业务员">
-            <el-input v-model="product.salesman" placeholder="请输入" style="width: 80%"/>
+            <el-select v-model="product.salesman" placeholder="请选择" style="width: 80%">
+              <el-option
+                v-for="item in salesMans"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
 
@@ -675,10 +694,16 @@
 
 <script>
 
+  import { mapGetters } from 'vuex'
   import {getAllProduct, commitCBDOrder} from '../../../api/product.js'
   import local from '@/utils/storage'
 
   export default {
+    computed: {
+      ...mapGetters([
+        'realName'
+      ])
+    },
     data() {
 
       var checkBatchData = (rule, value, callback) => {
@@ -700,6 +725,7 @@
         isDirectSelect: false,
         isUpdateLaminate: false,
         isUpdateIronware: false,
+        isShowPipe: true,
 
         product: {
           isClear: 'true',
@@ -742,6 +768,7 @@
 
           materialColor: '',
           materialType: '',
+          materialTypeCode: '',
           glassColor: '0',
           width: '',
           depth: '',
@@ -750,6 +777,7 @@
           linePlace: '',
           lightColor: '',//开启方向
           lineColor: '0',
+          pipeType: '',
           remark: '',
           price: '',
 
@@ -789,6 +817,7 @@
         lineColor: [{value: '0', label: '无'},
           {value: '1', label: '白色'},
           {value: '2', label: '黑色'}],
+        pipeType: [{value: '单管', label: '单管'},{value: '单管', label: '双管'}],
         materialColor: [{value: '1', label: '黄铜拉丝'},
           {value: '2', label: '古铜拉丝'},
           {value: '3', label: '哑黑'},
@@ -810,7 +839,8 @@
           {value: '1', label: '黑色'},
           {value: '2', label: '灰色'},
           {value: '3', label: '金色'}],
-        salesMans: [{value: '', lable: ''},],
+        salesMans: [{value: '张芫荟', lable: '张芫荟'},{value: '柳红海', lable: '柳红海'},{value: '潘建江', lable: '潘建江'},
+          {value: '张博凯', lable: '张博凯'},{value: '梁明辉', lable: '梁明辉'},{value: '夏晓兵', lable: '夏晓兵'},{value: '柳小波', lable: '柳小波'}],
         nums: [{value: '0', label: '0'}, {value: '1', label: '1'}, {value: '2', label: '2'}, {
           value: '3',
           label: '3'
@@ -900,6 +930,10 @@
       }
     },
 
+    watch: {
+      // "laminate.materialType": 'materialIsEqual'
+    },
+
     methods: {
 
       deleteRow(index, rows) {
@@ -961,7 +995,6 @@
                 this.product.deliveryDate = ''
                 this.product.orderId = ''
                 this.product.salesman = ''
-                this.product.orderMaker = ''
                 this.product.remark = ''
                 this.transomInfo = {
                   transomType: '',
@@ -1048,7 +1081,6 @@
         this.product.deliveryDate = ''
         this.product.orderId = ''
         this.product.salesman = ''
-        this.product.orderMaker = ''
         this.product.remark = ''
         this.transomInfo = {
           transomType: '',
@@ -1083,20 +1115,8 @@
         var isValid = true;
         var info = this.laminate;
 
-        if (info.lightColor == undefined || info.lightColor == '') {
-
-          isValid = false;
-
-        }
-        if (info.lineColor == undefined || info.lineColor == '') {
-
-          isValid = false;
-
-        }
         if (info.materialColor == undefined || info.materialColor == '') {
-
           isValid = false;
-
         }
 
         if (info.depth == undefined || info.depth == '') {
@@ -1119,7 +1139,6 @@
         if (isValid) {
 
           var laminateInfo = {}
-
           laminateInfo.materialColor = this.laminate.materialColor;
           laminateInfo.materialType = this.laminate.materialType;
           laminateInfo.glassColor = this.laminate.glassColor;
@@ -1132,7 +1151,7 @@
           laminateInfo.lineColor = this.laminate.lineColor;
           laminateInfo.remark = this.laminate.remark;
           laminateInfo.price = this.laminate.price;
-
+          laminateInfo.pipeType = this.laminate.pipeType
 
           this.product.laminateInfos.push(laminateInfo)
           this.$message({
@@ -1171,6 +1190,16 @@
         this.laminate.lineColor = '';
         this.laminate.price = '';
         this.laminate.remark = '';
+      },
+
+      materialIsEqual(){
+        alert(this.laminate.materialType);
+        if(this.laminate.materialType == '8003'){
+          this.isShowPipe = true
+        }else {
+          this.isShowPipe = false
+        }
+
       },
       addIronwareInfo() {
 
@@ -1281,6 +1310,7 @@
     },
     created() {
 
+      this.product.orderMaker = this.realName;
       var productVO = local.get('productVO')
       if (productVO != undefined && productVO != '') {
         this.product = productVO;

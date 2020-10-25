@@ -10,6 +10,7 @@ const user = {
     name: '',
     menu: {},
     avatar: '',
+    realName:'',
     roles: []
   },
 
@@ -19,6 +20,9 @@ const user = {
     },
     SET_NAME: (state, name) => {
       state.name = name
+    },
+    SET_REALNAME: (state, realName) =>{
+      state.realName = realName
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -82,6 +86,7 @@ const user = {
           }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
+          commit('SET_REALNAME', data.realName)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -95,6 +100,7 @@ const user = {
           commit('SET_TOKEN', '')
           commit('SET_NAME', '')
           commit('SET_ROLES', [])
+          commit('SET_REALNAME', '')
           removeToken()
           resolve()
         }).catch(error => {
@@ -109,6 +115,7 @@ const user = {
         commit('SET_TOKEN', '')
         commit('SET_NAME', '')
         commit('SET_ROLES', [])
+        commit('SET_REALNAME', '')
         removeToken()
         resolve()
       })

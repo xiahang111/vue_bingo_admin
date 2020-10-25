@@ -91,6 +91,24 @@ export function getMaterialVOById(params) {
   })
 }
 
+export function getFileNamesByOrderUid(params) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/getFileNamesByOrderUid',
+    method: 'get',
+    params
+  })
+}
+
+export function deleteByOrderUid(params) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/deleteByOrderUid',
+    method: 'get',
+    params
+  })
+}
+
 export function saveOrderAgain(params) {
 
   return request({

@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-row>
-        <el-col span="6">
+        <!-- <el-col span="6">
           <el-select v-model="listQuery.glassColor" placeholder="玻璃颜色"
                      style="width: 80%">
             <el-option
@@ -12,7 +12,7 @@
               :value="item.value">
             </el-option>
           </el-select>
-        </el-col>
+        </el-col> -->
 
         <el-col span="18">
           <el-date-picker
@@ -77,7 +77,10 @@
       </el-table-column>-->
 
       <!-- 产品编号-->
-      <el-table-column align="center" label="玻璃颜色" prop="glassColor" width="260"></el-table-column>
+      <el-table-column align="center" label="订单类型" prop="materialType" width="260"></el-table-column>
+
+      <!-- 玻璃描述-->
+      <el-table-column align="center" label="玻璃描述" prop="glassDetail" width="260"></el-table-column>
 
       <!-- 长度结果-->
       <el-table-column align="center" label="长度结果(mm)" prop="glassHeight">
@@ -90,7 +93,7 @@
       </el-table-column>
 
       <!-- 宽度结果-->
-      <el-table-column align="center" label="块数" prop="glassNum">
+      <el-table-column align="center" label="块数" prop="materialNum">
 
       </el-table-column>
 

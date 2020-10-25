@@ -105,7 +105,8 @@
         <template slot-scope="scope">
           <el-button @click="getMaterial(scope.row)" type="text" size="small">详情</el-button>
           <el-button @click="toSaveOrderAgain(scope.row)" type="text" size="small">重新下单</el-button>
-          <!--<el-button type="text" size="small">编辑</el-button>-->
+          <el-button @click="reDownLoad(scope.row)" type="text" size="small">下载</el-button>
+          <el-button @click="deleteByOrderUid(scope.row)" type="text" size="small">删除</el-button>
         </template>
 
       </el-table-column>
@@ -245,7 +246,7 @@
   import waves from '@/directive/waves' // waves directive
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-  import {getOrderByUser, getMaterialVOById, saveOrderAgain} from '@/api/product.js'
+  import {getOrderByUser, getMaterialVOById, saveOrderAgain, getFileNamesByOrderUid, deleteByOrderUid } from '@/api/product.js'
   import local from '@/utils/storage'
 
 
@@ -418,6 +419,62 @@
           status: '0'
         }]
         this.total = this.list.length
+
+      },
+
+      deleteByOrderUid(row){
+
+        var param = {
+          orderUid:''
+        };
+
+        param.orderUid = row.uid
+
+        deleteByOrderUid(param).then(response =>{
+          if (response.code == "success") {
+            location.reload();
+          }else {
+            this.$message({
+              message: response.data,
+              type: 'warning'
+            })
+          }
+        })
+
+
+
+      },
+
+      reDownLoad(row){
+        var param = {
+          orderUid:''
+        };
+
+        param.orderUid = row.uid
+
+        getFileNamesByOrderUid(param).then(response =>{
+          if (response.code == "success") {
+            let fileNames = response.data
+
+            let url = '/order/excelDownload?fileNames=';
+            for (let i = 0; i < fileNames.length; i++) {
+
+              if (i == 0) {
+                url = url + fileNames[i]
+              } else {
+                url = url + "," + fileNames[i]
+              }
+
+            }
+            window.open(process.env.ADMIN_API + url);
+          }else {
+            this.$message({
+              message: response.data,
+              type: 'warning'
+            })
+          }
+        })
+
 
       },
       toSaveOrderAgain(row) {

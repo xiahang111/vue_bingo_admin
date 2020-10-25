@@ -124,13 +124,13 @@
         </template>
       </el-table-column>
 
-      <!--<el-table-column fixed="right" label="操作" align="center">
+      <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click="comfirmDelete(scope.row)" type="text" size="small">撤回</el-button>
 
-          <el-button type="text" size="small">编辑</el-button>
+          <!-- <el-button type="text" size="small">编辑</el-button> -->
         </template>
-      </el-table-column> -->
+      </el-table-column>
 
     </el-table>
 
@@ -416,6 +416,7 @@
         this.addLoding = true;
         var params = {}
         params.recordUid = this.deleteRecordUid
+        params.type = 'origin'
         callbackStoreRecord(params).then(response => {
 
           if (response.code == 'fail') {

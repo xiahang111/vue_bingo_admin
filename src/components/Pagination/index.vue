@@ -69,7 +69,7 @@ export default {
         return this.limit
       },
       set(val) {
-        this.$emit('update:limit', val)
+        this.$emit('update:pageSize', val)
       }
     }
   },

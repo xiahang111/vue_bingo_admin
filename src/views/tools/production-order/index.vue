@@ -449,7 +449,14 @@
 
         <el-col span="6">
           <el-form-item label="业务员">
-            <el-input v-model="product.salesman" placeholder="请输入" style="width: 80%"/>
+            <el-select v-model="product.salesman" placeholder="请选择" style="width: 80%">
+              <el-option
+                v-for="item in salesMans"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
 
@@ -694,6 +701,7 @@
           </el-select>
         </el-form-item>
 
+
         <el-form-item label="拉手类型:">
           <el-select v-model="materialUpdateinfo.handleType" placeholder="请选择" style="width: 80%">
             <el-option
@@ -807,8 +815,6 @@
         <el-form-item>
           <el-button type="primary" @click="updateIronware()">修改</el-button>
         </el-form-item>
-
-
       </el-form>
 
 
@@ -820,10 +826,16 @@
 
 <script>
 
+  import { mapGetters } from 'vuex'
   import {getAllProduct, commitOrder} from '../../../api/product.js'
   import local from '@/utils/storage'
 
   export default {
+    computed: {
+      ...mapGetters([
+        'realName'
+      ])
+    },
     data() {
 
       var checkBatchData = (rule, value, callback) => {
@@ -969,7 +981,8 @@
           {value: '2', label: '20铝芯角码'}, {value: '3', label: '22锌合金角码'},
           {value: '4', label: '22铝芯角码'}, {value: '5', label: '上品角码'},
           {value: '6', label: '联动1号锌合金角码'}, {value: '7', label: '联动2号铁片角码'}, {value: '8', label: '联动3号铁片角码'}],
-        salesMans: [{value: '', lable: ''},],
+        salesMans: [{value: '张芫荟', lable: '张芫荟'},{value: '柳红海', lable: '柳红海'},{value: '潘建江', lable: '潘建江'},
+          {value: '张博凯', lable: '张博凯'},{value: '梁明辉', lable: '梁明辉'},{value: '夏晓兵', lable: '夏晓兵'},{value: '柳小波', lable: '柳小波'}],
         nums: [{value: '0', label: '0'}, {value: '1', label: '1'}, {value: '2', label: '2'}, {
           value: '3',
           label: '3'
@@ -1117,7 +1130,6 @@
                 this.product.deliveryDate = ''
                 this.product.orderId = ''
                 this.product.salesman = ''
-                this.product.orderMaker = ''
                 this.product.remark = ''
                 this.transomInfo = {
                   transomType: '',
@@ -1214,7 +1226,6 @@
         this.product.deliveryDate = ''
         this.product.orderId = ''
         this.product.salesman = ''
-        this.product.orderMaker = ''
         this.product.remark = ''
         this.transomInfo = {
           transomType: '',
@@ -1511,6 +1522,7 @@
     },
     created() {
 
+      this.product.orderMaker = this.realName;
       var productVO = local.get('productVO')
       if (productVO != undefined && productVO != '') {
         this.product = productVO;
