@@ -85,9 +85,10 @@
       <!-- 品名-->
       <el-table-column sortable align="center" label="销售员" prop="salesman"></el-table-column>
 
+
       <el-table-column sortable align="center" label="客户名称" prop="customerName"></el-table-column>
 
-
+      <el-table-column sortable align="center" label="收货人名称" prop="customerNick"></el-table-column>
       <!-- 产品名称
       <el-table-column align="center" label="产品名称" prop="联动一号">
         <template slot-scope="scope">
@@ -102,6 +103,10 @@
       </el-table-column>
 
       <el-table-column align="center" label="客户地址" prop="customerAddr">
+
+      </el-table-column>
+
+      <el-table-column align="center" label="快递信息" prop="express">
 
       </el-table-column>
 
@@ -151,6 +156,9 @@
         <el-form-item label="客户姓名:">
           <el-input v-model="addCustomer.customerName" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
+        <el-form-item label="收货人姓名:">
+          <el-input v-model="addCustomer.customerNick" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
 
         <el-form-item label="客户地址:">
           <el-input v-model="addCustomer.customerAddr" placeholder="请输入" style="width: 60%"/>
@@ -158,6 +166,9 @@
 
         <el-form-item label="客户手机号:">
           <el-input v-model="addCustomer.cutomerPhone" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+        <el-form-item label="快递信息:">
+          <el-input v-model="addCustomer.express" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
 
@@ -256,6 +267,8 @@
           customerAddr: '',
           cutomerPhone: '',
           salesman: '',
+          express: '',
+          customerNick:'',
           customerResource: '2'
         },
         dialogPvVisible: false,

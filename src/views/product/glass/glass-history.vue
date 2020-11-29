@@ -68,6 +68,9 @@
       <!-- 产品编号-->
       <el-table-column align="center" label="订单编号" prop="orderId" width="260"></el-table-column>
 
+      <!-- 产品编号-->
+      <el-table-column align="center" label="客户姓名" prop="customerName" width="260"></el-table-column>
+
 
       <!-- 产品名称
       <el-table-column align="center" label="产品名称" prop="联动一号">
@@ -367,8 +370,8 @@
       handleDownload() {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
-          const tHeader = ['订单编号', '玻璃颜色', '长度结果(mm)', '宽度结果(mm)', '块数', '创建时间']
-          const filterVal = ['orderId', 'glassColor', 'glassHeight', 'glassWidth', 'glassNum', 'createTime']
+          const tHeader = ['订单编号', '玻璃详情', '长度结果(mm)', '宽度结果(mm)', '块数', '创建时间']
+          const filterVal = ['orderId', 'glassDetail', 'glassHeight', 'glassWidth', 'materialNum', 'createTime']
           const data = this.formatJson(filterVal)
           excel.export_json_to_excel({
             header: tHeader,

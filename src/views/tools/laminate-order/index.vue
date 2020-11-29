@@ -305,7 +305,7 @@
 
         <el-col span="6">
           <el-form-item label="大包装数量">
-            <el-select v-model="product.bigPackageNum" placeholder="请选择" style="width: 80%">
+            <el-select v-model="product.bigPackageNum" filterable placeholder="请选择" style="width: 80%">
               <el-option
                 v-for="item in nums"
                 :key="item.value"
@@ -318,7 +318,7 @@
 
         <el-col span="6">
           <el-form-item label="小包装数量">
-            <el-select v-model="product.simplePackageNum" placeholder="请选择" style="width: 80%">
+            <el-select v-model="product.simplePackageNum" filterable placeholder="请选择" style="width: 80%">
               <el-option
                 v-for="item in nums"
                 :key="item.value"
@@ -403,7 +403,7 @@
         <el-button @click="drawer = true" type="warning" align="right">
           预览
         </el-button>
-        <el-button type="primary" @click="onSubmit('form')">提交</el-button>
+        <el-button type="primary" @click="onSubmit('form')" v-loading.fullscreen.lock="fullscreenLoading">提交</el-button>
         <el-button type="info" @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
@@ -435,6 +435,14 @@
             <span v-if="scope.row.materialColor == 6">绅士灰</span>
             <span v-if="scope.row.materialColor == 7">拉丝黑</span>
             <span v-if="scope.row.materialColor == 8">拉丝灰</span>
+            <span v-if="scope.row.materialColor == 9">欧歌红</span>
+            <span v-if="scope.row.materialColor == 10">瓷泳黑</span>
+            <span v-if="scope.row.materialColor == 11">拉丝金</span>
+            <span v-if="scope.row.materialColor == 12">黑色</span>
+            <span v-if="scope.row.materialColor == 13">金色</span>
+            <span v-if="scope.row.materialColor == 14">深金色</span>
+            <span v-if="scope.row.materialColor == 15">古铜色</span>
+            <span v-if="scope.row.materialColor == 16">水性灰</span>
 
           </template>
         </el-table-column>
@@ -450,6 +458,8 @@
             <span v-if="scope.row.glassColor == 7">黑玻</span>
             <span v-if="scope.row.glassColor == 8">超白春意阑珊</span>
             <span v-if="scope.row.glassColor == 9">丝印黑边</span>
+            <span v-if="scope.row.glassColor == 10">银镜</span>
+            <span v-if="scope.row.glassColor == 11">超白长虹</span>
 
           </template>
         </el-table-column>
@@ -723,6 +733,7 @@
       return {
         drawer: false,
         isDirectSelect: false,
+        fullscreenLoading: false,
         isUpdateLaminate: false,
         isUpdateIronware: false,
         isShowPipe: true,
@@ -817,7 +828,7 @@
         lineColor: [{value: '0', label: '无'},
           {value: '1', label: '白色'},
           {value: '2', label: '黑色'}],
-        pipeType: [{value: '单管', label: '单管'},{value: '单管', label: '双管'}],
+        pipeType: [{value: '单管', label: '单管'},{value: '双管', label: '双管'}],
         materialColor: [{value: '1', label: '黄铜拉丝'},
           {value: '2', label: '古铜拉丝'},
           {value: '3', label: '哑黑'},
@@ -825,7 +836,15 @@
           {value: '5', label: '罗马灰'},
           {value: '6', label: '绅士灰'},
           {value: '7', label: '拉丝黑'},
-          {value: '8', label: '拉丝灰'}],
+          {value: '8', label: '拉丝灰'},
+          {value: '9', label: '欧歌红'},
+          {value: '10', label: '瓷泳黑'},
+          {value: '11', label: '拉丝金'},
+          {value: '12', label: '黑色'},
+          {value: '13', label: '金色'},
+          {value: '14', label: '深金色'},
+          {value: '15', label: '古铜色'},
+          {value: '16', label: '水性灰'}],
         glassColor: [{value: '0', label: '无玻璃'}, {value: '1', label: '欧洲灰'},
           {value: '2', label: '蓝星灰'},
           {value: '3', label: '金茶'},
@@ -834,7 +853,9 @@
           {value: '6', label: '白玻'},
           {value: '7', label: '黑玻'},
           {value: '8', label: '超白春意阑珊'},
-          {value: '9', label: '丝印黑边'}],
+          {value: '9', label: '丝印黑边'},
+          {value: '10', label: '银镜'},
+          {value: '11', label: '超白长虹'}],
         ironwareColor: [{value: '0', label: '无'},
           {value: '1', label: '黑色'},
           {value: '2', label: '灰色'},
@@ -870,7 +891,40 @@
           }, {value: '36', label: '36'}, {value: '37', label: '37'}, {value: '38', label: '38'}, {
             value: '39',
             label: '39'
-          }, {value: '40', label: '40'},],
+          }, {value: '40', label: '40'},{value: '41', label: '41'},{value: '42', label: '42'},{value: '43', label: '43'},
+          {value: '44', label: '44'},{value: '45', label: '45'},{value: '46', label: '46'},{value: '47', label: '47'},{value: '48', label: '48'},
+          {value: '49', label: '49'},{value: '50', label: '50'},{value: '51', label: '51'}, {value: '52', label: '52'}, {value: '53', label: '53'}, {
+            value: '54',
+            label: '54'
+          }, {value: '55', label: '55'},
+          {value: '56', label: '56'}, {value: '57', label: '57'}, {value: '58', label: '58'}, {
+            value: '59',
+            label: '59'
+          }, {value: '60', label: '60'}, {value: '61', label: '61'},
+          {value: '62', label: '62'}, {value: '63', label: '63'}, {value: '64', label: '64'}, {
+            value: '65',
+            label: '65'
+          }, {value: '66', label: '66'},
+          {value: '67', label: '67'}, {value: '68', label: '68'}, {value: '69', label: '69'}, {
+            value: '70',
+            label: '70'
+          }, {value: '71', label: '71'}, {value: '72', label: '72'}, {value: '73', label: '73'}, {
+            value: '74',
+            label: '74'
+          }, {value: '75', label: '75'},
+          {value: '76', label: '76'}, {value: '77', label: '77'}, {value: '78', label: '78'}, {
+            value: '79',
+            label: '79'
+          }, {value: '80', label: '80'}, {value: '81', label: '81'}, {value: '82', label: '82'},
+          {value: '83', label: '83'}, {value: '84', label: '84'}, {value: '85', label: '85'}, {
+            value: '86',
+            label: '86'
+          }, {value: '87', label: '87'}, {value: '88', label: '88'}, {value: '89', label: '89'}, {
+            value: '90',
+            label: '90'
+          }, {value: '91', label: '91'},{value: '92', label: '92'},{value: '93', label: '93'},{value: '94', label: '94'},
+          {value: '95', label: '95'},{value: '96', label: '96'},{value: '97', label: '97'},{value: '98', label: '98'},{value: '99', label: '99'},
+          {value: '100', label: '100'},{value: '101', label: '101'}],
         productType: [{value: '1', label: '成品'},
           {value: '2', label: '半成品'}],
 
@@ -963,6 +1017,8 @@
       ,
       onSubmit(formName) {
 
+        this.fullscreenLoading = true;
+
         this.$refs[formName].validate((valid) => {
 
           if (valid) {
@@ -1034,6 +1090,7 @@
                   type: 'success'
                 })
 
+                this.fullscreenLoading = false;
 
                 let fileNames = response.data
 
@@ -1049,9 +1106,16 @@
                 }
                 window.open(process.env.ADMIN_API + url);
 
+              } else {
+                this.fullscreenLoading = false;
+                this.$message({
+                  message: response.data,
+                  type: 'warning'
+                })
               }
             })
           } else {
+            this.fullscreenLoading = false;
             this.$message({
               message: '请完善表格信息！！!',
               type: 'warning'

@@ -43,6 +43,12 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="客户名" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.customerName }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="订单类型" align="center">
         <template slot-scope="{row}">
           <span>{{ row.productType == 'Complete' ? "成品" : "半成品"}}</span>
@@ -118,13 +124,14 @@
 
     <el-dialog title="" :visible.sync="dialogFormVisible">
       <el-divider content-position="left"><span style="color: #b4170f;font-size: large">产品信息</span></el-divider>
-
+      <span style="color: #2d2d2d">客户名:{{product.customerName}}</span>
       <el-table :data="product.materials" height="250" :stripe="true" align="center">
         <el-table-column prop="materialType" label="料型号">
           <template slot-scope="scope">
             <span v-if="scope.row.materialType == 1001">联动1号</span>
             <span v-if="scope.row.materialType == 1002">联动2号</span>
             <span v-if="scope.row.materialType == 1003">联动3号</span>
+            <span v-if="scope.row.materialType == 1005">联动5号</span>
             <span v-if="scope.row.materialType == 2001">上品2号</span>
             <span v-if="scope.row.materialType == 3001">50斜边</span>
             <span v-if="scope.row.materialType == 4001">上品1号</span>

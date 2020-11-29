@@ -258,7 +258,7 @@
           {value: '12', label: '黑色'},
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},],
+          {value: '15', label: '古铜色'},{value: '16', label: '水性灰'}],
         materialSource: [{value: '1', label: '康达料入库'},
           {value: '2', label: '东美料入库'},
           {value: '3', label: '风和料入库'},

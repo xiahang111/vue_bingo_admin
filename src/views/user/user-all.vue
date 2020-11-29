@@ -276,7 +276,9 @@
         },
         roleList: [{value: 'production', label: 'production'},
           {value: 'clerk', label: 'clerk'},
-          {value: 'store', label: 'store'}],
+          {value: 'store', label: 'store'},
+          {value: 'visit', label: 'visit'}],
+
         calendarTypeOptions,
         sortOptions: [{label: 'ID Ascending', key: '+id'}, {label: 'ID Descending', key: '-id'}],
         statusOptions: ['published', 'draft', 'deleted'],

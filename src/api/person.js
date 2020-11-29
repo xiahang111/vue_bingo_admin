@@ -31,3 +31,11 @@ export function getCompany(params) {
     data: params
   })
 }
+
+export function searchCustomer(params) {
+  return request({
+    url: process.env.PERSON_API + '/customer/searchCustomer',
+    method: 'get',
+    params
+  })
+}

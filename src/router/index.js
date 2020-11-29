@@ -127,13 +127,13 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/tools/material-calculate',
     name: 'sale',
-    meta: {title: '销售管理', icon: 'money', role: ['admin','clerk']},
+    meta: {title: '销售管理', icon: 'money', role: ['admin','clerk','visit']},
     children: [
       {
         path: 'order',
         name: '销售订单',
         component: () => import('@/views/sale/sale-order'),
-        meta: {title: '销售订单', role: ['admin','clerk']}
+        meta: {title: '销售订单', role: ['admin','clerk','visit']}
       },
       {
         path: 'order-return',
@@ -194,13 +194,13 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/person/person-all',
     name: 'person',
-    meta: {title: '资源信息', icon: 'skill', role: ['admin','clerk']},
+    meta: {title: '资源信息', icon: 'skill', role: ['admin','clerk','visit']},
     children: [
       {
         path: 'person-all',
         name: '客户信息',
         component: () => import('@/views/person/person-all'),
-        meta: {title: '客户信息', role: ['admin','clerk']}
+        meta: {title: '客户信息', role: ['admin','clerk','visit']}
       },
       {
         path: 'person-info',
