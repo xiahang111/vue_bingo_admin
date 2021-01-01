@@ -24,7 +24,16 @@
         <el-col span="6">
 
           <el-form-item label="客户名称">
-            <el-input v-model="product.customerNick" placeholder="请输入" style="width: 80%"/>
+            <!--<el-input v-model="product.customerNick" placeholder="请输入" style="width: 80%"/>-->
+            <el-select v-model="product.customerNick" filterable placeholder="请选择" style="width: 80%" @blur="customerBlur($event)">
+              <el-option
+                v-for="item in customerSearchList"
+                :key="item.customerNick"
+                :label="item.nameMapper"
+                :value="item.customerNick"
+                @click.native="customerSelect(item)">
+              </el-option>
+            </el-select>
           </el-form-item>
 
         </el-col>
@@ -442,7 +451,8 @@
             <span v-if="scope.row.materialColor == 13">金色</span>
             <span v-if="scope.row.materialColor == 14">深金色</span>
             <span v-if="scope.row.materialColor == 15">古铜色</span>
-            <span v-if="scope.row.materialColor == 16">水性灰</span>
+            <span v-if="scope.row.materialColor == 16">太空灰</span>
+            <span v-if="scope.row.materialColor == 18">坯料</span>
 
           </template>
         </el-table-column>
@@ -706,6 +716,7 @@
 
   import { mapGetters } from 'vuex'
   import {getAllProduct, commitCBDOrder} from '../../../api/product.js'
+  import { searchCustomer } from '../../../api/person.js'
   import local from '@/utils/storage'
 
   export default {
@@ -737,7 +748,7 @@
         isUpdateLaminate: false,
         isUpdateIronware: false,
         isShowPipe: true,
-
+        customerSearchList: [],
         product: {
           isClear: 'true',
           isHaveTransom: 'false',
@@ -844,7 +855,7 @@
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
           {value: '15', label: '古铜色'},
-          {value: '16', label: '水性灰'}],
+          {value: '16', label: '太空灰'},{value: '18', label: '坯料'}],
         glassColor: [{value: '0', label: '无玻璃'}, {value: '1', label: '欧洲灰'},
           {value: '2', label: '蓝星灰'},
           {value: '3', label: '金茶'},
@@ -1232,6 +1243,19 @@
 
 
       },
+      customerBlur(e){
+        this.product.customerNick = e.target.value;
+      },
+      customerSelect(customer){
+
+        console.log(customer);
+
+        this.product.customerNick = customer.customerNick;
+        this.product.customerName = customer.customerName;
+        this.product.customerPhoneNum = customer.customerPhone;
+        this.product.customerAddr = customer.customerAddr;
+        this.product.express = customer.express;
+      },
 
       resetTransom() {
 
@@ -1400,7 +1424,10 @@
             this.productList = response.data
           }
         }
-      )
+      );
+      searchCustomer().then(response => {
+        this.customerSearchList = response.data;
+      });
     }
 
   }

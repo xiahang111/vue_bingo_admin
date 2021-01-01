@@ -45,13 +45,15 @@
 
       <el-table-column label="客户名" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.customerName }}</span>
+          <span>{{ row.customerNick }}</span>
         </template>
       </el-table-column>
 
       <el-table-column label="订单类型" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.productType == 'Complete' ? "成品" : "半成品"}}</span>
+        <template slot-scope="scope">
+          <span v-if="scope.row.productType == 'Complete'">成品</span>
+          <span v-if="scope.row.productType == 'NotComplete'">半成品</span>
+          <span v-if="scope.row.productType == 'Other'">其他</span>
         </template>
       </el-table-column>
 
@@ -60,7 +62,10 @@
         <template slot-scope="scope">
           <span v-if="scope.row.orderType == 'DOORORDER'">玻璃门系列</span>
           <span v-if="scope.row.orderType == 'CBDORDER'">层板灯系列</span>
-          <span v-if="scope.row.orderType == undefined">玻璃门系列</span>
+          <span v-if="scope.row.orderType == 'METAL'">材料单</span>
+          <span v-if="scope.row.orderType == 'DESK'">极简餐桌系列</span>
+          <span v-if="scope.row.orderType == 'HANGING'">置物架系列</span>
+          <span v-if="scope.row.orderType == 'SPECIMEN'">小样品</span>
         </template>
 
       </el-table-column>
@@ -110,8 +115,8 @@
       <el-table-column fixed="right" label="操作" align="center">
         <template slot-scope="scope">
           <el-button @click="getMaterial(scope.row)" type="text" size="small">详情</el-button>
-          <el-button @click="toSaveOrderAgain(scope.row)" type="text" size="small">重新下单</el-button>
-          <el-button @click="reDownLoad(scope.row)" type="text" size="small">下载</el-button>
+          <el-button @click="toSaveOrderAgain(scope.row)" type="text" v-show="scope.row.orderType == 'DOORORDER' || scope.row.orderType == 'CBDORDER'" size="small">重新下单</el-button>
+          <el-button @click="reDownLoad(scope.row)" v-show="scope.row.orderType == 'DOORORDER' || scope.row.orderType == 'CBDORDER'" type="text" size="small">下载</el-button>
           <el-button @click="deleteByOrderUid(scope.row)" type="text" size="small">删除</el-button>
         </template>
 
@@ -131,6 +136,7 @@
             <span v-if="scope.row.materialType == 1001">联动1号</span>
             <span v-if="scope.row.materialType == 1002">联动2号</span>
             <span v-if="scope.row.materialType == 1003">联动3号</span>
+            <span v-if="scope.row.materialType == 1004">联动4号</span>
             <span v-if="scope.row.materialType == 1005">联动5号</span>
             <span v-if="scope.row.materialType == 2001">上品2号</span>
             <span v-if="scope.row.materialType == 3001">50斜边</span>

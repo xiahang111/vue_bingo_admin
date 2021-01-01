@@ -4,9 +4,18 @@
       <el-row>
 
         <el-col span="4">
-          <el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
+          <!--<el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
 
-          </el-input>
+          </el-input>-->
+          <el-select v-model="listQuery.keyword" filterable placeholder="品名" style="width: 90%">
+            <el-option
+              v-for="item in originNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
 
         </el-col>
         <el-col span="4">
@@ -164,7 +173,16 @@
         </el-form-item>
 
         <el-form-item label="材料名称:">
-          <el-input v-model="storeRecord.materialName" placeholder="请输入" style="width: 60%"/>
+          <!--<el-input v-model="storeRecord.materialName" placeholder="请输入" style="width: 60%"/>-->
+          <el-select v-model="storeRecord.materialName" filterable placeholder="请输入" style="width: 60%">
+            <el-option
+              v-for="item in originNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="状态:">
@@ -258,7 +276,7 @@
 <script>
 
   import waves from '@/directive/waves' // waves directive
-  import {getStoreRecord, saveStoreRecord, callbackStoreRecord,getStoreOriginRecord,saveStoreOriginalRecord} from '@/api/store.js'
+  import {getStoreRecord, saveStoreRecord, callbackStoreRecord,getStoreOriginRecord,saveStoreOriginalRecord , getOriginNameList} from '@/api/store.js'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -294,6 +312,7 @@
     },
     data() {
       return {
+        originNameList:[],
         addLoding: false,
         storeRecord: {
           uid: '',
@@ -310,7 +329,6 @@
           totalPrice:'',
           materialStatus: '',
           storeMaterialStatus: '1'
-
         },
         tableKey: 0,
         list: [],
@@ -374,7 +392,8 @@
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.setOriginNameList();
     },
     methods: {
       getList() {
@@ -405,6 +424,15 @@
           }, 1.5 * 1000)
         })
 
+
+      },
+      setOriginNameList(){
+        getOriginNameList().then(response => {
+          if (response.code == 'success') {
+            console.log('成品料名称列表', response);
+            this.originNameList = response.data;
+          }
+        })
 
       },
       handleFilter() {

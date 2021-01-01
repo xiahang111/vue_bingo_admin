@@ -7,12 +7,14 @@
         :collapse="isCollapse"
         :background-color="variables.menuBg"
         :text-color="variables.menuText"
-        :unique-opened="false"
+        :unique-opened="true"
         :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
         mode="vertical"
       >
+
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
+        <!--<sidebar-item :routes="routes" :items="items"></sidebar-item>-->
       </el-menu>
     </el-scrollbar>
   </div>

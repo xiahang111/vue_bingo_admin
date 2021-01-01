@@ -18,6 +18,15 @@ export function getStoreOrigin(query) {
   })
 }
 
+export function getStoreStatement(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store/getStoreStatement',
+    method: 'post',
+    data: query
+  })
+}
+
 export function getStoreOriginRecord(query) {
 
   return request({
@@ -87,6 +96,22 @@ export function deleteStoreOrigin(query) {
     url: process.env.ADMIN_API + '/store/deleteStoreOrigin',
     method: 'post',
     data: query
+  })
+}
+
+export function getStoreNameList(params) {
+  return request({
+    url: process.env.ADMIN_API + '/store/getStoreNameList',
+    method: 'get',
+    params
+  })
+}
+
+export function getOriginNameList(params) {
+  return request({
+    url: process.env.ADMIN_API + '/store/getOriginNameList',
+    method: 'get',
+    params
   })
 }
 

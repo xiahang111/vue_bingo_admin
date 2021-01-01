@@ -15,9 +15,18 @@
         </el-col>
 
         <el-col span="4">
-          <el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
+          <!--<el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
 
-          </el-input>
+          </el-input>-->
+          <el-select v-model="listQuery.keyword" filterable placeholder="品名" style="width: 90%" @blur="materialNameBlur($event)" @click="materialNameBlur($event)">
+            <el-option
+              v-for="item in storeNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
 
         </el-col>
         <el-col span="4">
@@ -117,7 +126,7 @@
           <span v-if="scope.row.materialColor == 'JS'">金色</span>
           <span v-if="scope.row.materialColor == 'SJS'">深金色</span>
           <span v-if="scope.row.materialColor == 'GTS'">古铜色</span>
-
+          <span v-if="scope.row.materialColor == 'TKH'">太空灰</span>
         </template>
       </el-table-column>
 
@@ -185,6 +194,15 @@
 
         <el-form-item label="材料名称:">
           <el-input v-model="storeSummary.materialName" placeholder="请输入" style="width: 60%"/>
+          <!--<el-select v-model="storeSummary.materialName" filterable placeholder="请输入" style="width: 90%">
+            <el-option
+              v-for="item in storeNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>-->
         </el-form-item>
 
         <el-form-item label="材料颜色:">
@@ -294,7 +312,7 @@
 <script>
 
   import waves from '@/directive/waves' // waves directive
-  import { getStoreSummary , saveStoreSummary, deleteStoreSummary } from '@/api/store.js'
+  import { getStoreSummary , saveStoreSummary, deleteStoreSummary, getStoreNameList } from '@/api/store.js'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -331,6 +349,7 @@
     data() {
       return {
 
+        storeNameList:[],
         storeSummary: {
 
           materialName: '',
@@ -387,7 +406,7 @@
           {value: '12', label: '黑色'},
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},],
+          {value: '15', label: '古铜色'},{value: '16', label: '太空灰'}],
         orderByList: [{value: 'material_name', label: '品名'},
           {value: 'specification', label: '规格'},
           {value: 'price', label: '单价'},
@@ -425,7 +444,8 @@
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.setStoreNameList();
     },
     methods: {
       getList() {
@@ -459,6 +479,15 @@
 
 
       },
+      setStoreNameList(){
+        getStoreNameList().then(response => {
+          if (response.code == 'success') {
+            console.log('成品料名称列表', response);
+            this.storeNameList = response.data;
+          }
+        })
+
+      },
       updateStoreInfo(row){
 
         this.storeSummaryInfo.uid = row.uid
@@ -475,6 +504,9 @@
 
         this.deleteStoreUid = row.uid
         this.isDeleteStore = true;
+      },
+      materialNameBlur(e){
+        this.listQuery.keyword = e.target.value;
       },
 
       resetQuery() {

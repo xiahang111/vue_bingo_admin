@@ -29,7 +29,7 @@
               <el-option
               v-for="item in customerSearchList"
               :key="item.customerNick"
-              :label="item.nameMapper"
+              :label="item.customerNick"
               :value="item.customerNick"
               @click.native="customerSelect(item)">
               </el-option>
@@ -132,7 +132,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-
         <el-col span="6">
           <el-form-item label="拉手种类">
             <el-select v-model="materialInfo.handleType" placeholder="请选择" style="width: 80%">
@@ -499,6 +498,7 @@
             <span v-if="scope.row.materialType == 1001">联动1号</span>
             <span v-if="scope.row.materialType == 1002">联动2号</span>
             <span v-if="scope.row.materialType == 1003">联动3号</span>
+            <span v-if="scope.row.materialType == 1004">联动4号</span>
             <span v-if="scope.row.materialType == 1005">联动5号</span>
             <span v-if="scope.row.materialType == 2001">上品2号</span>
             <span v-if="scope.row.materialType == 3001">50斜边</span>
@@ -881,6 +881,7 @@
           customerAddr: '',
           customerPhoneNum: '',
           express: '',
+          customerUid: '',
           materials: [],//材玻信息
           ironwares: [],//五金信息
           transoms: [],
@@ -983,7 +984,7 @@
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
           {value: '15', label: '古铜色'},
-          {value: '16', label: '水性灰'}],
+          {value: '16', label: '太空灰'},{value: '18', label: '坯料'}],
         glassColor: [{value: '0', label: '无玻璃'}, {value: '1', label: '欧洲灰'},
           {value: '2', label: '蓝星灰'},
           {value: '3', label: '金茶'},
@@ -1578,6 +1579,7 @@
         this.product.customerPhoneNum = customer.customerPhone;
         this.product.customerAddr = customer.customerAddr;
         this.product.express = customer.express;
+        this.product.customerUid = customer.uid;
       },
       customerBlur(e){
         this.product.customerNick = e.target.value;

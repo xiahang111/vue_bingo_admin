@@ -4,9 +4,18 @@
       <el-row>
 
         <el-col span="4">
-          <el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
+          <!--<el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
 
-          </el-input>
+          </el-input>-->
+          <el-select v-model="listQuery.keyword" filterable placeholder="品名" style="width: 90%">
+            <el-option
+              v-for="item in originNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
 
         </el-col>
         <el-col span="4">
@@ -245,7 +254,7 @@
 <script>
 
   import waves from '@/directive/waves' // waves directive
-  import {  saveStoreOrigin, getStoreOrigin ,deleteStoreOrigin} from '@/api/store.js'
+  import {  saveStoreOrigin, getStoreOrigin ,deleteStoreOrigin, getOriginNameList} from '@/api/store.js'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -281,7 +290,7 @@
     },
     data() {
       return {
-
+        originNameList:[],
         storeOrigin: {
 
           materialName: '',
@@ -361,7 +370,8 @@
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.setOriginNameList();
     },
     methods: {
       getList() {
@@ -393,6 +403,15 @@
           }, 1.5 * 1000)
         })
 
+
+      },
+      setOriginNameList(){
+        getOriginNameList().then(response => {
+          if (response.code == 'success') {
+            console.log('成品料名称列表', response);
+            this.originNameList = response.data;
+          }
+        })
 
       },
       updateStoreInfo(row){

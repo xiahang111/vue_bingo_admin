@@ -127,4 +127,13 @@ export function getGlassInfo(query) {
   })
 }
 
+export function getSalemenStatement(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/order/SalemenStatement',
+    method: 'post',
+    data: query
+  })
+}
+
 

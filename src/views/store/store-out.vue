@@ -15,9 +15,18 @@
         </el-col>
 
         <el-col span="4">
-          <el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
+          <!--<el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
 
-          </el-input>
+          </el-input>-->
+          <el-select v-model="listQuery.keyword" filterable placeholder="品名" style="width: 90%">
+            <el-option
+              v-for="item in storeNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
 
         </el-col>
         <el-col span="4">
@@ -117,6 +126,7 @@
           <span v-if="scope.row.materialColor == 'JS'">金色</span>
           <span v-if="scope.row.materialColor == 'SJS'">深金色</span>
           <span v-if="scope.row.materialColor == 'GTS'">古铜色</span>
+          <span v-if="scope.row.materialColor == 'TKH'">太空灰</span>
 
         </template>
       </el-table-column>
@@ -211,7 +221,17 @@
         </el-form-item>
 
         <el-form-item label="材料名称:">
-          <el-input v-model="storeRecord.materialName" placeholder="请输入" style="width: 60%"/>
+         <!-- <el-input v-model="storeRecord.materialName" placeholder="请输入" style="width: 60%"/>-->
+
+          <el-select v-model="storeRecord.materialName" filterable placeholder="请输入" style="width: 60%">
+            <el-option
+              v-for="item in storeNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="材料颜色:">
@@ -265,7 +285,7 @@
 <script>
 
   import waves from '@/directive/waves' // waves directive
-  import {getStoreRecord, saveStoreRecord, callbackStoreRecord} from '@/api/store.js'
+  import {getStoreRecord, saveStoreRecord, callbackStoreRecord, getStoreNameList } from '@/api/store.js'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -302,6 +322,7 @@
     data() {
       return {
         addLoding: false,
+        storeNameList:[],
         storeRecord: {
           materialResource: '',
           materialName: '',
@@ -345,7 +366,7 @@
           {value: '12', label: '黑色'},
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},],
+          {value: '15', label: '古铜色'},{value: '16', label: '太空灰'}],
         materialSource: [{value: '5', label: '车间用料'},
           {value: '6', label: '外销发货'}],
         orderByList: [{value: 'material_name', label: '品名'},
@@ -384,7 +405,8 @@
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.setStoreNameList();
     },
     methods: {
       getList() {
@@ -416,6 +438,15 @@
           }, 1.5 * 1000)
         })
 
+
+      },
+      setStoreNameList(){
+        getStoreNameList().then(response => {
+          if (response.code == 'success') {
+            console.log('成品料名称列表', response);
+            this.storeNameList = response.data;
+          }
+        })
 
       },
       handleFilter() {

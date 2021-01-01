@@ -4,9 +4,18 @@
       <el-row>
 
         <el-col span="4">
-          <el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
+          <!--<el-input v-model="listQuery.keyword" placeholder="品名" style="width: 90%">
 
-          </el-input>
+          </el-input>-->
+          <el-select v-model="listQuery.keyword" filterable placeholder="品名" style="width: 90%">
+            <el-option
+              v-for="item in originNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
 
         </el-col>
         <el-col span="4">
@@ -104,6 +113,9 @@
           <span v-if="scope.row.originalResource == 'STORE_OUT_FH'">出风和氧化</span>
           <span v-if="scope.row.originalResource == 'STORE_OUT_XX'">出铣型厂</span>
           <span v-if="scope.row.originalResource == 'STORE_OUT_WX'">外销发货</span>
+          <span v-if="scope.row.originalResource == 'STORE_OUT_SL'">出三联喷涂厂</span>
+          <span v-if="scope.row.originalResource == 'STORE_OUT_YM'">出原美喷涂厂</span>
+          <span v-if="scope.row.originalResource == 'STORE_OUT_YH'">出亿和氧化厂</span>
         </template>
 
       </el-table-column>
@@ -157,7 +169,16 @@
         </el-form-item>
 
         <el-form-item label="材料名称:">
-          <el-input v-model="storeRecord.materialName" placeholder="请输入" style="width: 60%"/>
+          <!--<el-input v-model="storeRecord.materialName" placeholder="请输入" style="width: 60%"/>-->
+          <el-select v-model="storeRecord.materialName" filterable placeholder="请输入" style="width: 60%">
+            <el-option
+              v-for="item in originNameList"
+              :key="item.storeName"
+              :label="item.storeName"
+              :value="item.storeName"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="状态:">
@@ -211,7 +232,7 @@
 <script>
 
   import waves from '@/directive/waves' // waves directive
-  import {getStoreRecord, saveStoreRecord, callbackStoreRecord,getStoreOriginRecord,saveStoreOriginalRecord} from '@/api/store.js'
+  import {getStoreRecord, saveStoreRecord, callbackStoreRecord,getStoreOriginRecord,saveStoreOriginalRecord,getOriginNameList} from '@/api/store.js'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -247,6 +268,7 @@
     },
     data() {
       return {
+        originNameList:[],
         addLoding: false,
         storeRecord: {
           uid: '',
@@ -287,7 +309,10 @@
           {value: '6', label: '出东美氧化'},
           {value: '7', label: '出风和氧化'},
           {value: '8', label: '出铣型厂'},
-          {value: '9', label: '外销发货'}],
+          {value: '9', label: '外销发货'},
+          {value: '10', label: '出三联喷涂厂'},
+          {value: '11', label: '出原美喷涂厂'},
+          {value: '12', label: '出亿和氧化厂'}],
         unit: [{value: 'kg', label: 'kg'}],
         specification: [{value: '2米', label: '2米'},
           {value: '2.5米', label: '2.5米'},{value: '3米', label: '3米'}],
@@ -329,7 +354,8 @@
       }
     },
     created() {
-      this.getList()
+      this.getList();
+      this.setOriginNameList();
     },
     methods: {
       getList() {
@@ -360,6 +386,15 @@
           }, 1.5 * 1000)
         })
 
+
+      },
+      setOriginNameList(){
+        getOriginNameList().then(response => {
+          if (response.code == 'success') {
+            console.log('成品料名称列表', response);
+            this.originNameList = response.data;
+          }
+        })
 
       },
       handleFilter() {
