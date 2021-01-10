@@ -111,6 +111,7 @@
       <!-- 产品编号-->
       <el-table-column sortable align="materialColor" label="颜色" prop="materialColor" >
         <template slot-scope="scope">
+          <span v-if="scope.row.materialColor == 'WYS'">无颜色</span>
           <span v-if="scope.row.materialColor == 'HTLS'">黄铜拉丝</span>
           <span v-if="scope.row.materialColor == 'TLS'">古铜拉丝</span>
           <span v-if="scope.row.materialColor == 'YH'">哑黑</span>
@@ -489,7 +490,6 @@
 
       },
       updateStoreInfo(row){
-
         this.storeSummaryInfo.uid = row.uid
         this.storeSummaryInfo.materialName = row.materialName
         this.storeSummaryInfo.specification = row.specification

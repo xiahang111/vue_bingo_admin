@@ -14,9 +14,10 @@
   },
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
-    "axios": "0.18.1",
+    "axios": "^0.18.1",
     "ckeditor": "^4.10.1",
     "codemirror": "^5.51.0",
+    "crypto-js": "^4.0.0",
     "echarts": "^4.2.1",
     "element-ui": "^2.13.1",
     "file-saver": "2.0.1",

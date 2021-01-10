@@ -205,7 +205,7 @@
     <el-dialog title="" :visible.sync="dialogFormVisible">
 
       <el-divider content-position="left">
-        <span style="color: #b4170f">新增入库</span>
+        <span style="color: #b4170f">新增出库</span>
       </el-divider>
 
       <el-form ref="form" :model="storeRecord" label-width="120px" :rules="rules">

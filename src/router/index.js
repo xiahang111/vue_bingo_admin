@@ -121,10 +121,10 @@ export const constantRoutes = [
         component: () => import('@/views/product/glass/glass-history'),
         meta: {title: '玻璃历史详情'}
       },{
-        path: 'glass-history',
-        name: '玻璃历史详情',
-        component: () => import('@/views/product/glass/glass-history'),
-        meta: {title: '玻璃历史详情'}
+        path: 'message-history',
+        name: '告警历史详情',
+        component: () => import('@/views/resource/remind-history'),
+        meta: {title: '告警历史详情'}
       }
     ]
   },
@@ -146,12 +146,6 @@ export const asyncRoutes = [
         name: '销售订单',
         component: () => import('@/views/sale/sale-order'),
         meta: {title: '销售订单', role: ['admin','clerk','visit']}
-      },
-      {
-        path: 'order-return',
-        name: '销售退货',
-        component: () => import('@/views/sale/sale-return'),
-        meta: {title: '销售退货', role: ['admin','clerk']}
       }
       ,{
         path: 'order-sale-statement',
@@ -206,6 +200,12 @@ export const asyncRoutes = [
         meta: {title: '坯料出库', role: ['admin','store']}
       },
       {
+        path: 'store-outside',
+        name: '在外材料详情',
+        component: () => import('@/views/store/store-outside'),
+        meta: {title: '在外材料详情', role: ['admin','store']}
+      },
+      {
         path: 'store-statement',
         name: '库存报表',
         component: () => import('@/views/store/store-statement'),
@@ -231,7 +231,13 @@ export const asyncRoutes = [
         name: '上游厂家信息',
         component: () => import('@/views/person/person-info'),
         meta: {title: '上游厂家信息', role: ['admin','clerk']}
-      }
+      },
+      {
+        path: 'store-remind-config',
+        name: '库存告警配置',
+        component: () => import('@/views/store/store-remind-config'),
+        meta: {title: '库存告警配置', role: ['admin']}
+      },
     ]
   },
   {
@@ -257,21 +263,21 @@ export const asyncRoutes = [
   },{
     path: '/system',
     component: Layout,
-    redirect: '/system/about-me',
+    redirect: '/system/change-pwd',
     name: 'person',
     meta: {title: '系统管理', icon: 'user1', role: ['admin','clerk','visit']},
     children: [
       {
         path: 'about-me',
-        name: '关于我',
+        name: '我的信息',
         component: () => import('@/views/system/about-me'),
-        meta: {title: '关于我', role: ['admin','clerk','visit']}
+        meta: {title: '我的信息', role: ['admin','clerk','visit']}
       },
       {
-        path: 'web-config',
-        name: '权限信息',
-        component: () => import('@/views/system/web-config'),
-        meta: {title: '系统配置', role: ['admin']}
+        path: 'change-pwd',
+        name: '修改密码',
+        component: () => import('@/views/system/change-pwd'),
+        meta: {title: '修改密码', role: ['admin','clerk','visit']}
       }
     ]
   }

@@ -2,10 +2,10 @@
   <div class="app-container">
     <!-- 查询和其他操作 -->
     <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick" >
-      <el-tab-pane label="关于我" name="one">
-        <span slot="label"><i class="el-icon-star-on"></i> 关于我</span>
+      <el-tab-pane label="我的信息" name="one">
+        <span slot="label"><i class="el-icon-star-on"></i> 我的信息</span>
         <el-form style="margin-left: 20px;" label-position="left" :model="form" label-width="100px" ref="changeAdminForm">
-          <el-form-item label="用户头像">
+          <!--<el-form-item label="用户头像">
 
             <div class="imgBody" v-if="form.photoList">
                 <i class="el-icon-error inputClass" v-show="icon" @click="deletePhoto()" @mouseover="icon = true"></i>
@@ -15,9 +15,9 @@
             <div v-else class="uploadImgBody" @click="checkPhoto">
               <i class="el-icon-plus avatar-uploader-icon"></i>
             </div>
-          </el-form-item>
+          </el-form-item>-->
 
-          <el-form-item label="昵称">
+          <el-form-item label="姓名">
             <el-input v-model="form.nickName" style="width: 400px"></el-input>
           </el-form-item>
 
@@ -37,13 +37,17 @@
             <el-input v-model="form.qqNumber" style="width: 400px"></el-input>
           </el-form-item>
 
-          <el-form-item label="Github">
+          <el-form-item label="手机号">
+            <el-input v-model="form.mobile" style="width: 400px"></el-input>
+          </el-form-item>
+
+          <!--<el-form-item label="Github">
             <el-input v-model="form.github" style="width: 400px"></el-input>
           </el-form-item>
 
           <el-form-item label="Gitee">
             <el-input v-model="form.gitee" style="width: 400px"></el-input>
-          </el-form-item>
+          </el-form-item>-->
 
           <!-- <el-form-item label="微信号">
             <el-input v-model="form.weChat" style="width: 400px"></el-input>
@@ -102,7 +106,7 @@
 
       </el-tab-pane> -->
 
-      <el-tab-pane label="个人履历" name="third">
+      <!--<el-tab-pane label="个人履历" name="third">
         <span slot="label"><i class="el-icon-edit"></i> 个人履历</span>
         <div class="editor-container">
           <CKEditor ref="ckeditor" :content="form.personResume" :height="500"></CKEditor>
@@ -112,9 +116,9 @@
           <el-button type="primary" @click="submitForm('personResume')" >保 存</el-button>
         </div>
 
-      </el-tab-pane>
+      </el-tab-pane>-->
 
-      <el-tab-pane label="修改密码" name="four">
+      <!--<el-tab-pane label="修改密码" name="one">
         <span slot="label"><i class="el-icon-edit"></i> 修改密码</span>
         <el-form :rules="rules" style="margin-left: 20px;" label-position="left" :model="changePwdForm"  label-width="80px" ref="changePwdForm">
           <el-form-item label="旧密码" prop="oldPwd">
@@ -135,7 +139,7 @@
           </el-form-item>
 
         </el-form>
-      </el-tab-pane>
+      </el-tab-pane>-->
 
     </el-tabs>
 
@@ -178,7 +182,6 @@ export default {
       photoList: [],
       fileIds: "",
       icon: false, //控制删除图标的显示
-
       //定义规则
       rules: {
         oldPwd: [
@@ -195,6 +198,7 @@ export default {
       }
     };
   },
+
   components: {
     AvatarCropper,
     CKEditor
@@ -205,7 +209,7 @@ export default {
     }
   },
   created() {
-    this.getDictList();
+    /*this.getDictList();*/
     this.getMeInfo();
   },
   methods: {
@@ -280,14 +284,14 @@ export default {
         {
           //获取CKEditor中的内容
           this.form.personResume = this.$refs.ckeditor.getData();
-          editMe(this.form).then(response => {
+          /*editMe(this.form).then(response => {
             console.log(response);
             this.$notify({
               title: "成功",
               message: "保存成功！",
               type: "success"
             });
-          });
+          });*/
         }
         break;
 
@@ -314,6 +318,7 @@ export default {
                 params.append("oldPwd", this.changePwdForm.oldPwd);
                 params.append("newPwd", this.changePwdForm.newPwd1);
                 changePwd(params).then(response => {
+                  alert(response)
                   console.log(response);
                   if (response.code == "success") {
                     this.$notify({
@@ -323,6 +328,7 @@ export default {
                     });
                     this.cancel(type);
                   } else {
+                    alert(response)
                     this.$notify.error({
                       title: "警告",
                       message: response.data

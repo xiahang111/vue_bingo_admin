@@ -23,11 +23,21 @@
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              Home
+              首页
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/system/about-me">
+            <el-dropdown-item>
+              我的信息
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/system/change-pwd">
+            <el-dropdown-item>
+              修改密码
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

@@ -6,7 +6,7 @@
         class="upload-demo"
         drag
         show-file-list
-        action="http://localhost:8501/api-web/order/upload"
+        action="http://178.236.44.94:8501/api-web/order/upload"
         :with-credentials='true'
         :headers="headers"
         :on-success="successReturn"

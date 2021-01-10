@@ -116,6 +116,7 @@
           <span v-if="scope.row.originalResource == 'STORE_OUT_SL'">出三联喷涂厂</span>
           <span v-if="scope.row.originalResource == 'STORE_OUT_YM'">出原美喷涂厂</span>
           <span v-if="scope.row.originalResource == 'STORE_OUT_YH'">出亿和氧化厂</span>
+          <span v-if="scope.row.originalResource == 'STORE_OUT_CY'">出长远拉丝厂</span>
         </template>
 
       </el-table-column>
@@ -157,7 +158,7 @@
       </el-divider>
 
       <el-form ref="form" :model="storeRecord" label-width="120px" :rules="rules">
-        <el-form-item label="材料来源:">
+        <el-form-item label="材料去向:">
           <el-select v-model="storeRecord.originalResource" placeholder="请选择" style="width: 60%">
             <el-option
               v-for="item in originalSource"
@@ -185,6 +186,17 @@
           <el-select v-model="storeRecord.materialStatus" placeholder="请选择" style="width: 60%">
             <el-option
               v-for="item in materialStatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="颜色:" v-if="storeRecord.materialStatus==4||storeRecord.materialStatus==6">
+          <el-select v-model="storeRecord.materialColor" placeholder="请选择" style="width: 60%">
+            <el-option
+              v-for="item in materialColor"
               :key="item.value"
               :label="item.label"
               :value="item.value">
@@ -312,12 +324,28 @@
           {value: '9', label: '外销发货'},
           {value: '10', label: '出三联喷涂厂'},
           {value: '11', label: '出原美喷涂厂'},
-          {value: '12', label: '出亿和氧化厂'}],
+          {value: '12', label: '出亿和氧化厂'},
+          {value: '13', label: '出长远拉丝厂'}],
         unit: [{value: 'kg', label: 'kg'}],
         specification: [{value: '2米', label: '2米'},
           {value: '2.5米', label: '2.5米'},{value: '3米', label: '3米'}],
-        materialStatus: [{value: '1', label: '入库'},{value: '2', label: '拉丝'},
-          {value: '3', label: '铣型'},{value: '4', label: '氧化'},{value: '5', label: '已完成'}],
+        materialStatus: [{value: '2', label: '拉丝'},{value: '7', label: '抛光'},
+          {value: '3', label: '铣型'},{value: '4', label: '氧化'},{value: '6', label: '喷涂'},{value: '9', label: '外销或发车间'}],
+        materialColor: [{value: '1', label: '黄铜拉丝'},
+          {value: '2', label: '古铜拉丝'},
+          {value: '3', label: '哑黑'},
+          {value: '4', label: '瓷沙黑'},
+          {value: '5', label: '罗马灰'},
+          {value: '6', label: '绅士灰'},
+          {value: '7', label: '拉丝黑'},
+          {value: '8', label: '拉丝灰'},
+          {value: '9', label: '欧歌红'},
+          {value: '10', label: '瓷泳黑'},
+          {value: '11', label: '拉丝金'},
+          {value: '12', label: '黑色'},
+          {value: '13', label: '金色'},
+          {value: '14', label: '深金色'},
+          {value: '15', label: '古铜色'},{value: '16', label: '太空灰'}],
         orderByList: [{value: 'material_name', label: '品名'},
           {value: 'specification', label: '规格'},
           {value: 'price', label: '单价'},

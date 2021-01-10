@@ -42,6 +42,7 @@
           <box-card />
         </el-col>
       </el-row>
+
       <!-- <el-col :xs="24" :sm="24" :lg="8">
         <div class="chart-wrapper">
           <raddar-chart />
@@ -75,6 +76,7 @@
   import TodoList from './components/TodoList'
   import BoxCard from './components/BoxCard'
   import { getLineData,getStoreTotalData } from '@/api/index'
+  import { getMessageRemindList } from '@/api/store'
 
   const lineChartData = {
     newVisitis: {
@@ -140,8 +142,36 @@
       handleSetLineChartData(type) {
         this.lineChartData = lineChartData[type]
       },
+      notify(title,message,offset){
+        this.$notify({
+          title: title,
+          message: message,
+          type: 'warning',
+          duration: 0,
+          offset:offset
+        });
+      },
+
+      getMessageList(){
+        getMessageRemindList().then(response => {
+            if (response.code == 'success') {
+              console.log(response.data);
+              let offset = -40;
+              for (let i = 0; i < response.data.length; i++) {
+                this.notify("库存告急",response.data[i].message,offset+=120);
+              }
+            }
+            // Just to simulate the time of the request
+            setTimeout(() => {
+              this.listLoading = false
+            }, 1.5 * 1000)
+          }
+
+        )
+      }
     },
     created() {
+      this.getMessageList();
       getLineData().then(
         response => {
           console.log("head获取网站配置", response);

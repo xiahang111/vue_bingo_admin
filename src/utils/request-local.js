@@ -68,7 +68,7 @@ service.interceptors.response.use(
       console.log("错误信息", response)
 
       Message({
-        message: res.message,
+        message: res.data,
         type: 'error',
         duration: 5 * 1000
       })

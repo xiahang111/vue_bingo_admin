@@ -123,6 +123,77 @@ export function callbackStoreRecord(params) {
   })
 }
 
+export function getStoreOutsideList(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-outside/getStoreOutsideList',
+    method: 'post',
+    data: query
+  })
+}
+
+export function saveStoreOutSideRecord(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-outside/saveStoreOutSideRecord',
+    method: 'post',
+    data: query
+  })
+}
+
+export function updateStoreOutSideData(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-outside/updateStoreOutSideData',
+    method: 'post',
+    data: query
+  })
+}
+
+export function saveRemindConfig(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-remind/saveRemindConfig',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getRemindConfigList(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-remind/getRemindConfigList',
+    method: 'post',
+    data: query
+  })
+}
+export function getMessageRemindList(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-remind/getMessageRemindList',
+    method: 'post',
+    data: query
+  })
+}
+
+export function deleteRemindConfigByUid(params) {
+  return request({
+    url: process.env.ADMIN_API + '/store-remind/deleteRemindConfigByUid',
+    method: 'get',
+    params
+  })
+}
+
+export function getMessageRemindPage(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/store-remind/getMessageRemindPage',
+    method: 'post',
+    data: query
+  })
+}
+
+
 
 
 
