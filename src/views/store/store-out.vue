@@ -127,6 +127,7 @@
           <span v-if="scope.row.materialColor == 'SJS'">深金色</span>
           <span v-if="scope.row.materialColor == 'GTS'">古铜色</span>
           <span v-if="scope.row.materialColor == 'TKH'">太空灰</span>
+          <span v-if="scope.row.materialColor == 'XYB'">象牙白</span>
 
         </template>
       </el-table-column>
@@ -366,7 +367,9 @@
           {value: '12', label: '黑色'},
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},{value: '16', label: '太空灰'}],
+          {value: '15', label: '古铜色'},
+          {value: '16', label: '太空灰'},
+          {value: '22', label: '象牙白'}],
         materialSource: [{value: '5', label: '车间用料'},
           {value: '6', label: '外销发货'}],
         orderByList: [{value: 'material_name', label: '品名'},

@@ -171,6 +171,7 @@
           <span v-if="scope.row.materialColor == 'SJS'">深金色</span>
           <span v-if="scope.row.materialColor == 'GTS'">古铜色</span>
           <span v-if="scope.row.materialColor == 'TKH'">太空灰</span>
+          <span v-if="scope.row.materialColor == 'XYB'">象牙白</span>
         </template>
       </el-table-column>
 
@@ -461,7 +462,9 @@
           {value: '12', label: '黑色'},
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},{value: '16', label: '太空灰'}],
+          {value: '15', label: '古铜色'},
+          {value: '16', label: '太空灰'},
+          {value: '22', label: '象牙白'}],
         location: [{value: '康达厂', label: '康达厂'},
           {value: '东美厂', label: '东美厂'},
           {value: '风和厂', label: '风和厂'},
@@ -624,6 +627,7 @@
           case 'GRAY':this.storeOutsideInfo.materialColor = '灰色';break;
           case 'XBS':this.storeOutsideInfo.materialColor = '香槟色';break;
           case 'RED':this.storeOutsideInfo.materialColor = '红色';break;
+          case 'XYB':this.storeOutsideInfo.materialColor = '象牙白';break;
           default:this.storeOutsideInfo.materialColor = '无颜色';break;
         }
 /*

@@ -168,6 +168,7 @@
           <span v-if="scope.row.materialColor == '13'">金色</span>
           <span v-if="scope.row.materialColor == '14'">深金色</span>
           <span v-if="scope.row.materialColor == '15'">古铜色</span>
+          <span v-if="scope.row.materialColor == '22'">象牙白</span>
 
         </template>
       </el-table-column>
@@ -328,7 +329,7 @@
           {value: '12', label: '黑色'},
           {value: '13', label: '金色'},
           {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},],
+          {value: '15', label: '古铜色'},{value: '22', label: '象牙白'}],
         materialSource: [{value: '1', label: '康达料入库'},
           {value: '2', label: '东美料入库'},
           {value: '3', label: '风和料入库'},
