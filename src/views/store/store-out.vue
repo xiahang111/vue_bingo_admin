@@ -111,6 +111,7 @@
       <!-- 产品编号-->
       <el-table-column sortable align="materialColor" label="颜色" prop="materialColor">
         <template slot-scope="scope">
+          <span v-if="scope.row.materialColor == 'WYS'">无颜色</span>
           <span v-if="scope.row.materialColor == 'HTLS'">黄铜拉丝</span>
           <span v-if="scope.row.materialColor == 'TLS'">古铜拉丝</span>
           <span v-if="scope.row.materialColor == 'YH'">哑黑</span>
@@ -127,7 +128,13 @@
           <span v-if="scope.row.materialColor == 'SJS'">深金色</span>
           <span v-if="scope.row.materialColor == 'GTS'">古铜色</span>
           <span v-if="scope.row.materialColor == 'TKH'">太空灰</span>
+          <span v-if="scope.row.materialColor == 'FTH'">氟碳灰</span>
+          <span v-if="scope.row.materialColor == 'PL'">坯料</span>
+          <span v-if="scope.row.materialColor == 'GRAY'">灰色</span>
+          <span v-if="scope.row.materialColor == 'XBS'">香槟色</span>
+          <span v-if="scope.row.materialColor == 'RED'">红色</span>
           <span v-if="scope.row.materialColor == 'XYB'">象牙白</span>
+          <span v-if="scope.row.materialColor == 'PGHUI'">苹果灰</span>
 
         </template>
       </el-table-column>
@@ -287,6 +294,7 @@
 
   import waves from '@/directive/waves' // waves directive
   import {getStoreRecord, saveStoreRecord, callbackStoreRecord, getStoreNameList } from '@/api/store.js'
+  import { getAllColor } from '@/api/basedata'
   import {parseTime} from '@/utils'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -353,23 +361,7 @@
         },
         deleteRecordUid: '',
         isDeleteRecord: false,
-        materialColor: [{value: '1', label: '黄铜拉丝'},
-          {value: '2', label: '古铜拉丝'},
-          {value: '3', label: '哑黑'},
-          {value: '4', label: '瓷沙黑'},
-          {value: '5', label: '罗马灰'},
-          {value: '6', label: '绅士灰'},
-          {value: '7', label: '拉丝黑'},
-          {value: '8', label: '拉丝灰'},
-          {value: '9', label: '欧歌红'},
-          {value: '10', label: '瓷泳黑'},
-          {value: '11', label: '拉丝金'},
-          {value: '12', label: '黑色'},
-          {value: '13', label: '金色'},
-          {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},
-          {value: '16', label: '太空灰'},
-          {value: '22', label: '象牙白'}],
+        materialColor: [],
         materialSource: [{value: '5', label: '车间用料'},
           {value: '6', label: '外销发货'}],
         orderByList: [{value: 'material_name', label: '品名'},
@@ -410,6 +402,7 @@
     created() {
       this.getList();
       this.setStoreNameList();
+      this.setMaterialColorList();
     },
     methods: {
       getList() {
@@ -448,6 +441,14 @@
           if (response.code == 'success') {
             console.log('成品料名称列表', response);
             this.storeNameList = response.data;
+          }
+        })
+
+      },
+      setMaterialColorList(){
+        getAllColor().then(response => {
+          if (response.code == 'success') {
+            this.materialColor = response.data;
           }
         })
 

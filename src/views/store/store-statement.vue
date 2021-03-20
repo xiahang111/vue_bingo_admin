@@ -242,6 +242,7 @@
   import waves from '@/directive/waves' // waves directive
   import {getStoreRecord, saveStoreRecord, callbackStoreRecord, getStoreNameList, getStoreStatement} from '@/api/store.js'
   import {parseTime} from '@/utils'
+  import { getAllColor } from '@/api/basedata'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   const calendarTypeOptions = [
@@ -315,21 +316,7 @@
           {value: 'false', label: '不区分颜色'}],
         materialType: [{value: '1', label: '成品料'},
           {value: '2', label: '坯料'}],
-        materialColor: [{value: '1', label: '黄铜拉丝'},
-          {value: '2', label: '古铜拉丝'},
-          {value: '3', label: '哑黑'},
-          {value: '4', label: '瓷沙黑'},
-          {value: '5', label: '罗马灰'},
-          {value: '6', label: '绅士灰'},
-          {value: '7', label: '拉丝黑'},
-          {value: '8', label: '拉丝灰'},
-          {value: '9', label: '欧歌红'},
-          {value: '10', label: '瓷泳黑'},
-          {value: '11', label: '拉丝金'},
-          {value: '12', label: '黑色'},
-          {value: '13', label: '金色'},
-          {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},{value: '22', label: '象牙白'}],
+        materialColor: [],
         materialSource: [{value: '1', label: '康达料入库'},
           {value: '2', label: '东美料入库'},
           {value: '3', label: '风和料入库'},
@@ -372,6 +359,7 @@
     created() {
       this.getList();
       this.setStoreNameList();
+      this.setMaterialColorList();
     },
     methods: {
       getList() {
@@ -471,6 +459,14 @@
         })
       },
 
+      setMaterialColorList(){
+        getAllColor().then(response => {
+          if (response.code == 'success') {
+            this.materialColor = response.data;
+          }
+        })
+
+      },
 
       onSubmit(formName) {
         this.addLoding = true;

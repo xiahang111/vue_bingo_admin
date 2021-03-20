@@ -1,0 +1,57 @@
+import request from '@/utils/request-local'
+
+export function getAllOrderMaker(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/basedata/getAllOrderMaker',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getAllSaleMan(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/basedata/getAllSaleMan',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getAllColor(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/basedata/getAllColor',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getAllOrderType(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/basedata/getAllOrderType',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getAllOrderStatus(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/basedata/getAllOrderStatus',
+    method: 'post',
+    data: query
+  })
+}
+
+export function getAllExpressRecord(query) {
+
+  return request({
+    url: process.env.ADMIN_API + '/basedata/getAllExpressRecord',
+    method: 'post',
+    data: query
+  })
+}
+
+

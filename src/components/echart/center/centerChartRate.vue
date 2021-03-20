@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import echartMixins from "@/utils/resizeMixins";
+import echartMixins from "../../../utils/resizeMixins";
 
 export default {
   data() {

@@ -119,19 +119,19 @@
 
     <el-table v-loading="listLoading" :data="list" element-loading-text="Loading..." border fit highlight-current-row>
 
-      <el-table-column align="center" sortable label="业务员" prop="salesman" width=" 260">
+      <el-table-column align="center" sortable label="业务员" prop="salesman" width=" 230">
 
       </el-table-column>
 
-      <el-table-column align="center" sortable label="客户名称" prop="customerName" width=" 260">
+      <el-table-column align="center" sortable label="客户名称" prop="customerName" width=" 230">
 
       </el-table-column>
 
-      <el-table-column align="center" sortable label="制单人" prop="orderMaker" width=" 260">
+      <el-table-column align="center" sortable label="制单人" prop="orderMaker" width=" 230">
 
       </el-table-column>
 
-      <el-table-column align="center" sortable label="订单编号" prop="orderId" width=" 260">
+      <el-table-column align="center" sortable label="订单编号" prop="orderId" width=" 230">
 
       </el-table-column>
 
@@ -151,7 +151,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" sortable label="订单价格" prop="totalPrice" width=" 260">
+      <el-table-column align="center" sortable label="订单价格" prop="totalPrice" width=" 200">
+
+      </el-table-column>
+
+      <el-table-column align="center" sortable label="下单时间" prop="createTime" width="260">
 
       </el-table-column>
 
@@ -242,6 +246,7 @@
   import {getStoreRecord, saveStoreRecord, callbackStoreRecord, getStoreNameList} from '@/api/store.js'
   import { getSalemenStatement} from '@/api/product.js'
   import {parseTime} from '@/utils'
+  import { getAllColor,getAllOrderMaker, getAllSaleMan } from '@/api/basedata'
   import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
   const calendarTypeOptions = [
@@ -308,29 +313,14 @@
           orderType: '',
           salemen:''
         },
-        salesMans: [{value: '张芫荟', lable: '张芫荟'},{value: '柳红海', lable: '柳红海'},{value: '潘建江', lable: '潘建江'},
-          {value: '张博凯', lable: '张博凯'},{value: '梁明辉', lable: '梁明辉'},{value: '夏晓兵', lable: '夏晓兵'},{value: '柳小波', lable: '柳小波'}],
+        salesMans: [],
         deleteRecordUid: '',
         isDeleteRecord: false,
         orderType: [{value: '', label: '==请选择=='},{value: '1', label: '玻璃门'},
           {value: '2', label: '层板灯'}],
         productType: [{value: '', label: '==请选择=='},{value: '1', label: '成品'},
           {value: '2', label: '半成品'}],
-        materialColor: [{value: '1', label: '黄铜拉丝'},
-          {value: '2', label: '古铜拉丝'},
-          {value: '3', label: '哑黑'},
-          {value: '4', label: '瓷沙黑'},
-          {value: '5', label: '罗马灰'},
-          {value: '6', label: '绅士灰'},
-          {value: '7', label: '拉丝黑'},
-          {value: '8', label: '拉丝灰'},
-          {value: '9', label: '欧歌红'},
-          {value: '10', label: '瓷泳黑'},
-          {value: '11', label: '拉丝金'},
-          {value: '12', label: '黑色'},
-          {value: '13', label: '金色'},
-          {value: '14', label: '深金色'},
-          {value: '15', label: '古铜色'},],
+        materialColor: [],
         materialSource: [{value: '1', label: '康达料入库'},
           {value: '2', label: '东美料入库'},
           {value: '3', label: '风和料入库'},
@@ -400,6 +390,14 @@
     created() {
       this.getList();
       this.setStoreNameList();
+      this.setMaterialColorList();
+      getAllSaleMan().then(
+        response => {
+          if (response.code == "success") {
+            this.salesMans = response.data;
+          }
+        }
+      )
     },
     methods: {
       getList() {
@@ -435,6 +433,14 @@
           if (response.code == 'success') {
             console.log('成品料名称列表', response);
             this.storeNameList = response.data;
+          }
+        })
+
+      },
+      setMaterialColorList(){
+        getAllColor().then(response => {
+          if (response.code == 'success') {
+            this.materialColor = response.data;
           }
         })
 

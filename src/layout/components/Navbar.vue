@@ -4,8 +4,14 @@
 
     <breadcrumb class="breadcrumb-container" />
 
+
     <div class="right-menu">
 
+      <el-button class="button" size="small" type="info" @click="toDatav" round>数据大盘<i class="el-icon-s-platform el-icon--right"></i></el-button>
+
+      <span class="welcome">
+        欢迎您&nbsp;,&nbsp;&nbsp;{{this.$store.getters.realName}}&nbsp;&nbsp;&nbsp;
+      </span>
       <template v-if="device!=='mobile'">
 
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -14,6 +20,7 @@
 
 
       </template>
+
 
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
@@ -41,6 +48,7 @@
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
+
     </div>
   </div>
 </template>
@@ -74,6 +82,9 @@ export default {
     async logout() {
       await this.$store.dispatch('LogOut')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    toDatav(){
+      window.open("http://www.binge01.cn:9529","_blank")
     }
   }
 }
@@ -100,6 +111,25 @@ export default {
     }
   }
 
+  .button {
+    margin-left: 800px;
+    margin-right: 20px;
+    float: left;
+    margin-top: 0.8%;
+    background-color: #404344;
+    transition: background .3s;
+  }
+
+  .welcome {
+    line-height: 54px;
+    height: 100%;
+    float: left;
+    cursor: pointer;
+    transition: background .3s;
+    -webkit-tap-highlight-color:transparent;
+    color: #595c5d;
+
+  }
   .breadcrumb-container {
     float: left;
   }

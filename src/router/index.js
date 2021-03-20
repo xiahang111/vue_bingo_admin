@@ -149,12 +149,46 @@ export const asyncRoutes = [
       }
       ,{
         path: 'order-sale-statement',
-        name: '销售报表',
+        name: '销售总览',
         component: () => import('@/views/sale/sale-statement'),
-        meta: {title: '销售报表', role: ['admin']}
+        meta: {title: '销售总览', role: ['admin']}
       }
     ]
-  },{
+  },
+  {
+    path: '/order-manage',
+    component: Layout,
+    redirect: '/tools/material-calculate',
+    name: 'sale',
+    meta: {title: '订单管理', icon: 'star', role: ['admin','clerk','visit']},
+    children: [
+      {
+        path: 'order-process',
+        name: '订单跟踪',
+        component: () => import('@/views/ordermanage/order-process'),
+        meta: {title: '订单跟踪', role: ['admin','clerk']}
+      },{
+        path: 'process-history',
+        name: '流程表解析回溯',
+        component: () => import('@/views/ordermanage/process-history'),
+        meta: {title: '流程表解析回溯', role: ['admin','clerk']}
+      },{
+        path: 'order-express',
+        name: '订单物流信息',
+        component: () => import('@/views/ordermanage/order-express'),
+        meta: {title: '订单物流信息', role: ['admin','clerk']}
+      }
+      ,{
+        path: 'order-sale-statement',
+        name: '退货订单',
+        component: () => import('@/views/sale/sale-statement'),
+        meta: {title: '退货订单', role: ['admin']}
+      },
+
+    ]
+  },
+
+  {
     path: '/store',
     component: Layout,
     redirect: '/store/store-all',
@@ -207,9 +241,9 @@ export const asyncRoutes = [
       },
       {
         path: 'store-statement',
-        name: '库存报表',
+        name: '库存总览',
         component: () => import('@/views/store/store-statement'),
-        meta: {title: '库存报表', role: ['admin','store']}
+        meta: {title: '库存总览', role: ['admin','store']}
       }
     ]
   },
@@ -241,6 +275,50 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/report',
+    component: Layout,
+    redirect: '/tools/material-calculate',
+    name: 'report',
+    meta: {title: '报表统计', icon: 'clipboard', role: ['admin','clerk']},
+    children: [
+      {
+        path: 'ordermaker-report',
+        name: '制单报表',
+        component: () => import('@/views/report/ordermaker-report'),
+        meta: {title: '制单报表', role: ['admin']}
+      }
+      ,/*{
+        path: 'order-sale-statement',
+        name: '大客户报表',
+        component: () => import('@/views/sale/sale-statement'),
+        meta: {title: '大客户报表', role: ['admin']}
+      },*/{
+        path: 'store-report',
+        name: '库存报表',
+        component: () => import('@/views/report/store-report'),
+        meta: {title: '库存报表', role: ['admin']}
+      }
+      ,{
+        path: 'saleman-report',
+        name: '销售员报表',
+        component: () => import('@/views/report/saleman-report'),
+        meta: {title: '销售员报表', role: ['admin']}
+      }
+      ,/*{
+        path: 'order-sale-statement',
+        name: '产品报表',
+        component: () => import('@/views/sale/sale-statement'),
+        meta: {title: '产品报表', role: ['admin']}
+      },{
+        path: 'order-sale-statement',
+        name: '玻璃报表',
+        component: () => import('@/views/sale/sale-statement'),
+        meta: {title: '玻璃报表', role: ['admin']}
+      }*/
+
+    ]
+  },
+  {
     path: '/user',
     component: Layout,
     redirect: '/person/user-all',
@@ -265,7 +343,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/system/change-pwd',
     name: 'person',
-    meta: {title: '系统管理', icon: 'user1', role: ['admin','clerk','visit']},
+    meta: {title: '系统管理', icon: 'system', role: ['admin','clerk','visit']},
     children: [
       {
         path: 'about-me',

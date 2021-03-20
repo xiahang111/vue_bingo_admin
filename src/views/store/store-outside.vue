@@ -470,6 +470,7 @@
           {value: '风和厂', label: '风和厂'},
           {value: '铣型厂', label: '铣型厂'},
           {value: '三联喷涂厂', label: '三联喷涂厂'},
+          {value: '金色恒辉喷涂厂入库', label: '金色恒辉喷涂厂入库'},
           {value: '原美喷涂厂', label: '原美喷涂厂'},
           {value: '亿和氧化厂', label: '亿和氧化厂'},
           {value: '长远拉丝厂', label: '长远拉丝厂'}],
@@ -478,6 +479,7 @@
           {value: '7', label: '出风和氧化'},
           {value: '8', label: '出铣型厂'},
           {value: '10', label: '出三联喷涂厂'},
+          {value: '14', label: '出金色恒辉喷涂厂'},
           {value: '11', label: '出原美喷涂厂'},
           {value: '12', label: '出亿和氧化厂'},
           {value: '13', label: '出长远拉丝厂'}],
@@ -628,6 +630,7 @@
           case 'XBS':this.storeOutsideInfo.materialColor = '香槟色';break;
           case 'RED':this.storeOutsideInfo.materialColor = '红色';break;
           case 'XYB':this.storeOutsideInfo.materialColor = '象牙白';break;
+          case 'PGHUI':this.storeOutsideInfo.materialColor = '苹果灰';break;
           default:this.storeOutsideInfo.materialColor = '无颜色';break;
         }
 /*

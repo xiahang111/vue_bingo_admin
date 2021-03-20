@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-
+      <!-- 103.229.127.22 -->
       <el-upload
         class="upload-demo"
         drag
         show-file-list
-        action="http://178.236.44.94:8501/api-web/order/upload"
+        action="http://103.229.127.22:8501/api-web/order/upload"
         :with-credentials='true'
         :headers="headers"
         :on-success="successReturn"
@@ -114,3 +114,8 @@
     }
   }
 </script>
+<style scoped>
+  .el-scrollbar__wrap {
+    overflow-x: hidden!important;
+  }
+</style>

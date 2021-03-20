@@ -20,12 +20,25 @@ export default {
     },
     height: {
       type: String,
-      default: '300px'
+      default: '350px'
+    },
+    pieData: {
+      type: Object,
+      required: true
     }
   },
   data() {
     return {
       chart: null
+    }
+  },
+  watch: {
+    pieData: {
+      deep: true,
+      handler() {
+
+        this.initChart()
+      }
     }
   },
   mounted() {
@@ -45,29 +58,29 @@ export default {
       this.chart = echarts.init(this.$el, 'macarons')
 
       this.chart.setOption({
+        backgroundColor: 'rgb(249,249,249)',
         tooltip: {
           trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
         },
-        legend: {
+        title: {
+          text: '订单种类分布情况',
           left: 'center',
-          bottom: '10',
-          data: ['半成品', '成品', '型材']
+          top: 0,
+          textStyle: {
+            color: '#222222',
+            fontSize: 18
+          }
         },
+
         series: [
           {
-            name: 'WEEKLY WRITE ARTICLES',
+            name: '订单种类',
             type: 'pie',
+            roseType: '70%',
+            radius: [30, 110],
+            center: ['50%', '50%'],
             roseType: 'radius',
-            radius: [15, 95],
-            center: ['50%', '38%'],
-            data: [
-              { value: 320, name: '半成品' },
-              { value: 240, name: '成品' },
-              { value: 149, name: '型材' }
-            ],
-            animationEasing: 'cubicInOut',
-            animationDuration: 2600
+            data: this.pieData.data
           }
         ]
       })

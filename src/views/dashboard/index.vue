@@ -11,7 +11,7 @@
       </el-col>
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
-          <line-chart-nums :chart-data="orderNums"/>
+          <pie-chart :pie-data="orderTypePie"/>
         </div>
       </el-col>
 
@@ -20,7 +20,7 @@
     <!--<el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <line-chart-nums :chart-data="orderNums"/>
     </el-row> -->
-    <el-divider content-position="left" >
+    <el-divider content-position="left">
       <span style="font-size: large">成品料信息</span>
     </el-divider>
     <store-group :type="summaryType"/>
@@ -32,15 +32,18 @@
     <el-row :gutter="32">
 
       <el-row :gutter="8">
-        <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-          <transaction-table />
+        <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}"
+                style="padding-right:8px;margin-bottom:30px;">
+          <transaction-table/>
         </el-col>
-        <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-          <todo-list />
+        <!--<el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}"
+                style="margin-bottom:30px;">
+          <todo-list/>
         </el-col>
-        <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-          <box-card />
-        </el-col>
+        <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}"
+                style="margin-bottom:30px;">
+          <box-card/>
+        </el-col>-->
       </el-row>
 
       <!-- <el-col :xs="24" :sm="24" :lg="8">
@@ -48,16 +51,16 @@
           <raddar-chart />
         </div>
       </el-col> -->
-     <!-- <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <pie-chart/>
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="12">
-        <div class="chart-wrapper">
-          <bar-chart/>
-        </div>
-      </el-col>-->
+      <!-- <el-col :xs="24" :sm="24" :lg="12">
+         <div class="chart-wrapper">
+           <pie-chart/>
+         </div>
+       </el-col>
+       <el-col :xs="24" :sm="24" :lg="12">
+         <div class="chart-wrapper">
+           <bar-chart/>
+         </div>
+       </el-col>-->
     </el-row>
 
   </div>
@@ -75,8 +78,9 @@
   import TransactionTable from './components/TransactionTable'
   import TodoList from './components/TodoList'
   import BoxCard from './components/BoxCard'
-  import { getLineData,getStoreTotalData } from '@/api/index'
-  import { getMessageRemindList } from '@/api/store'
+  import {getLineData, getStoreTotalData} from '@/api/index'
+  import {getMessageRemindList} from '@/api/store'
+  import {getOrderTypePie} from '@/api/report'
 
   const lineChartData = {
     newVisitis: {
@@ -86,17 +90,17 @@
   }
 
   const storeData = {
-    summary:{
-      storeTotalWeight:0,
-      storeTotalNum:0,
-      storeTotalPrice:0,
-      storeTotalType:0
+    summary: {
+      storeTotalWeight: 0,
+      storeTotalNum: 0,
+      storeTotalPrice: 0,
+      storeTotalType: 0
     },
-    origin:{
-      storeTotalWeight:0,
-      storeTotalNum:0,
-      storeTotalPrice:0,
-      storeTotalType:0
+    origin: {
+      storeTotalWeight: 0,
+      storeTotalNum: 0,
+      storeTotalPrice: 0,
+      storeTotalType: 0
     }
   }
 
@@ -131,10 +135,11 @@
     data() {
       return {
         lineChartData: lineChartData.newVisitis,
+        orderTypePie: {},
         orderSales: orderSales.newVisitis,
         orderNums: orderSales.newVisitis,
-        summaryType:'summary',
-        originType:'origin'
+        summaryType: 'summary',
+        originType: 'origin'
       }
     },
 
@@ -142,23 +147,32 @@
       handleSetLineChartData(type) {
         this.lineChartData = lineChartData[type]
       },
-      notify(title,message,offset){
+      notify(title, message, offset) {
         this.$notify({
           title: title,
           message: message,
           type: 'warning',
           duration: 0,
-          offset:offset
+          offset: offset
         });
       },
 
-      getMessageList(){
+      getOrderTypePidData() {
+        getOrderTypePie().then(response => {
+          if (response.code == 'success') {
+            this.orderTypePie = response.data;
+            console.log("材料饼图数据:"+this.orderTypePie)
+          }
+        })
+      },
+
+      getMessageList() {
         getMessageRemindList().then(response => {
             if (response.code == 'success') {
               console.log(response.data);
               let offset = -40;
               for (let i = 0; i < response.data.length; i++) {
-                this.notify("库存告急",response.data[i].message,offset+=120);
+                this.notify("库存告急", response.data[i].message, offset += 120);
               }
             }
             // Just to simulate the time of the request
@@ -166,12 +180,16 @@
               this.listLoading = false
             }, 1.5 * 1000)
           }
-
         )
       }
     },
     created() {
       this.getMessageList();
+      getOrderTypePie().then(response => {
+        if (response.code == 'success') {
+          this.orderTypePie = response;
+        }
+      })
       getLineData().then(
         response => {
           console.log("head获取网站配置", response);

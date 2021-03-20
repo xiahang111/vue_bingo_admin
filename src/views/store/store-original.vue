@@ -224,11 +224,15 @@
           <el-input v-model="storeOriginInfo.weight" placeholder="请输入" style="width: 60%"/>
         </el-form-item>
 
+        <el-form-item label="数量:">
+          <el-input v-model="storeOriginInfo.materialNum" placeholder="请输入" style="width: 60%"/>
+        </el-form-item>
+
 
         <!-- 按钮 -->
         <el-form-item>
 
-          <el-button type="primary" @click="updateSubmit('updateform')">提交</el-button>
+          <el-button type="primary" @click="sale-order.vueupdateSubmit('updateform')">提交</el-button>
           <el-button type="info" @click="onCancel">取消</el-button>
         </el-form-item>
 
@@ -422,6 +426,7 @@
         this.storeOriginInfo.unit = row.unit
         this.storeOriginInfo.price = row.price
         this.storeOriginInfo.weight = row.weight
+        this.storeOriginInfo.materialNum = row.materialNum;
 
         this.updateStoreSummary = true;
       },
